@@ -3,10 +3,11 @@ spring:
         name: telegram-bot
 
     datasource:
-      driver: com.mysql.jdbc.Driver
-      url: jdbc:mysql://localhost/telegram-bot
-      username:
-      password:
+      type: com.zaxxer.hikari.HikariDataSource
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost/telegram-devices-bot?useUnicode=true&characterEncoding=utf-8
+      username: 
+      password: 
 
     jpa:
       show-sql: true
@@ -17,12 +18,13 @@ spring:
         hibernate.cache.use_query_cache: false
         hibernate.generate_statistics: true
         hibernate.hbm2ddl.auto: validate
+        hibernate.dialect: org.hibernate.dialect.MySQLDialect
 
 server:
   port: 9000
 
 telegram:
-  token:
-  username:
-  path:
+  token: 
+  username: 
+  path: 
 
