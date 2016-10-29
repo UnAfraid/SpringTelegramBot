@@ -21,10 +21,15 @@ targetCompatibility = 1.8
 
 dependencies {
     compile("org.telegram:telegrambots:2.4.0")
-    // compile("org.springframework.data:spring-data-jpa")
-    // compile("org.hibernate:hibernate-core:5.2.4.Final")
-    // compile("mysql:mysql-connector-java:5.1.9")
-    compile("org.springframework.boot:spring-boot-starter-web") {
+    compile("org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Draft-16")
+    compile("org.springframework.data:spring-data-jpa")
+    compile("org.hibernate:hibernate-core:5.2.4.Final")
+    compile("com.zaxxer:HikariCP:2.5.1")
+    compile("mysql:mysql-connector-java:6.0.5")
+//    compile("org.springframework.boot:spring-boot-starter-web") {
+//        exclude module: "spring-boot-starter-tomcat"
+//    }
+    compile("org.springframework.boot:spring-boot-starter-web-services") {
         exclude module: "spring-boot-starter-tomcat"
     }
     compile("org.springframework.boot:spring-boot-configuration-processor")

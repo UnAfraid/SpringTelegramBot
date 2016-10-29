@@ -6,6 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
 /**
@@ -13,6 +15,8 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
  */
 @SpringBootApplication
 @EnableConfigurationProperties({TelegramBotConfig.class})
+@EnableTransactionManagement
+@EnableJpaRepositories(basePackages = {"com.github.unafraid.spring.bot.db.repositories"})
 public class Application extends SpringBootServletInitializer {
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
