@@ -1,0 +1,19 @@
+{
+  "properties": [
+    {
+      "name": "telegram.path",
+      "type": "java.lang.String",
+      "description": "Description for telegram.path."
+    },
+    {
+      "name": "telegram.token",
+      "type": "java.lang.String",
+      "description": "Description for telegram.token."
+    },
+    {
+      "name": "telegram.username",
+      "type": "java.lang.String",
+      "description": "Description for telegram.username."
+    }
+  ]
+}

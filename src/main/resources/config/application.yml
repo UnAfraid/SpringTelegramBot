@@ -1,0 +1,28 @@
+spring:
+    application:
+        name: telegram-bot
+
+    datasource:
+      driver: com.mysql.jdbc.Driver
+      url: jdbc:mysql://localhost/telegram-bot
+      username:
+      password:
+
+    jpa:
+      show-sql: true
+      hibernate:
+        ddlAuto: update
+      properties:
+        hibernate.cache.use_second_level_cache: false
+        hibernate.cache.use_query_cache: false
+        hibernate.generate_statistics: true
+        hibernate.hbm2ddl.auto: validate
+
+server:
+  port: 9000
+
+telegram:
+  token:
+  username:
+  path:
+

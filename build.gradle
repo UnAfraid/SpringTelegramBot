@@ -1,0 +1,65 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'war'
+apply plugin: 'spring-boot'
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile("org.telegram:telegrambots:2.4.0")
+    // compile("org.springframework.data:spring-data-jpa")
+    // compile("org.hibernate:hibernate-core:5.2.4.Final")
+    // compile("mysql:mysql-connector-java:5.1.9")
+    compile("org.springframework.boot:spring-boot-starter-web") {
+        exclude module: "spring-boot-starter-tomcat"
+    }
+    compile("org.springframework.boot:spring-boot-configuration-processor")
+    compile("org.springframework.boot:spring-boot-starter-jetty")
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    testCompile("junit:junit")
+}
+
+compileJava.dependsOn(processResources)
+
+war {
+
+}
+
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+def generalManifest = manifest {
+    attributes('Built-By': System.getProperty('user.name'),
+            'Implementation-URL': 'https://github.com/SpringTelegramBot/',
+            'Main-Class': 'com.github.unafraid.spring.Application')
+}
+
+
+jar {
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    manifest {
+        from(generalManifest)
+    }
+}
+
+task stage {
+    dependsOn build, jar
+}
