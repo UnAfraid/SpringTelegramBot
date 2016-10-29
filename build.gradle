@@ -46,7 +46,7 @@ tasks.withType(JavaCompile) {
 
 def generalManifest = manifest {
     attributes('Built-By': System.getProperty('user.name'),
-            'Implementation-URL': 'https://github.com/SpringTelegramBot/',
+            'Implementation-URL': 'https://github.com/UnAfraid/SpringTelegramBot/',
             'Main-Class': 'com.github.unafraid.spring.Application')
 }
 

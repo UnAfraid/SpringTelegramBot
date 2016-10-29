@@ -17,7 +17,8 @@ build/
 */build/
 gradle.properties
 
-
 .DS_Store
 .directory
 *.log
+
+src/main/resources/config/application.yml
