@@ -3,12 +3,12 @@ package com.github.unafraid.spring.bot.handlers.impl;
 import com.github.unafraid.spring.bot.db.services.IUsersService;
 import com.github.unafraid.spring.bot.handlers.CommandHandler;
 import com.github.unafraid.spring.bot.util.BotUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -19,12 +19,8 @@ import java.util.Map;
  */
 @Service
 public final class HelpHandler implements ICommandHandler {
+    @Inject
     private IUsersService usersService;
-
-    @Autowired
-    public void setUsersService(IUsersService usersService) {
-        this.usersService = usersService;
-    }
 
     @Override
     public String getCommand() {

@@ -6,8 +6,8 @@ spring:
       type: com.zaxxer.hikari.HikariDataSource
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://localhost/telegram-devices-bot?useUnicode=true&characterEncoding=utf-8
-      username: 
-      password: 
+      username:
+      password:
 
     jpa:
       show-sql: true
@@ -24,7 +24,6 @@ server:
   port: 9000
 
 telegram:
-  token: 
-  username: 
-  path: 
-
+  token:
+  username:
+  path:

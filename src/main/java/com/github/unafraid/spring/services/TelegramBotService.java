@@ -19,7 +19,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.Constants;
 import org.telegram.telegrambots.api.methods.BotApiMethod;
@@ -31,6 +30,7 @@ import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.exceptions.TelegramApiRequestException;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -49,14 +49,10 @@ public class TelegramBotService extends TelegramWebhookBot {
 
     private TelegramBotConfig config;
 
+    @Inject
     private IUsersService usersService;
 
-    @Autowired
-    public void setUsersService(IUsersService usersService) {
-        this.usersService = usersService;
-    }
-
-    @Autowired
+    @Inject
     public TelegramBotService(TelegramBotConfig config) {
         this.config = config;
         try {
