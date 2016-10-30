@@ -1,7 +1,10 @@
 package com.github.unafraid.spring.bot.handlers.impl;
 
+import com.github.unafraid.spring.bot.db.services.IUsersService;
 import com.github.unafraid.spring.bot.handlers.CommandHandler;
 import com.github.unafraid.spring.bot.util.BotUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
@@ -14,7 +17,15 @@ import java.util.Map;
 /**
  * @author UnAfraid
  */
+@Service
 public final class HelpHandler implements ICommandHandler {
+    private IUsersService usersService;
+
+    @Autowired
+    public void setUsersService(IUsersService usersService) {
+        this.usersService = usersService;
+    }
+
     @Override
     public String getCommand() {
         return "/help";
@@ -38,7 +49,7 @@ public final class HelpHandler implements ICommandHandler {
             final Map<String, List<String>> help = new LinkedHashMap<>();
             CommandHandler.getInstance().getHandlers()
                     .stream()
-                    //.filter(handler -> UsersHandler.validate(id, handler.getRequiredAccessLevel()))
+                    .filter(handler -> usersService.validate(id, handler.getRequiredAccessLevel()))
                     .forEach(handler ->
                     {
                         final String line = handler.getCommand() + " - " + handler.getDescription();

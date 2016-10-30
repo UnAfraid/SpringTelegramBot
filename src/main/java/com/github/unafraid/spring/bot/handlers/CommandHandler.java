@@ -1,9 +1,6 @@
 package com.github.unafraid.spring.bot.handlers;
 
-import com.github.unafraid.spring.bot.handlers.impl.HelpHandler;
 import com.github.unafraid.spring.bot.handlers.impl.ICommandHandler;
-import com.github.unafraid.spring.bot.handlers.impl.StartHandler;
-import com.github.unafraid.spring.bot.handlers.impl.WhoAmI;
 
 import java.util.Collection;
 import java.util.Map;
@@ -16,12 +13,6 @@ public final class CommandHandler {
     private final Map<String, ICommandHandler> _handlers = new ConcurrentHashMap<>();
 
     protected CommandHandler() {
-        // General
-        addHandler(new HelpHandler());
-        addHandler(new StartHandler());
-
-        // System
-        addHandler(new WhoAmI());
     }
 
     public void addHandler(ICommandHandler handler) {

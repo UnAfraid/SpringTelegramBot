@@ -15,4 +15,13 @@ public interface IUsersService {
     User findById(int id);
 
     List<User> findAll();
+
+    default boolean validate(int id, int level) {
+        if (level == 0) {
+            return true;
+        }
+
+        final User user = findById(id);
+        return (user != null) && (user.getLevel() >= level);
+    }
 }

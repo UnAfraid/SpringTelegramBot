@@ -1,6 +1,7 @@
 package com.github.unafraid.spring.bot.handlers.impl;
 
 import com.github.unafraid.spring.bot.util.BotUtil;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
@@ -10,6 +11,7 @@ import java.util.List;
 /**
  * @author UnAfraid
  */
+@Service
 public final class StartHandler implements ICommandHandler {
     @Override
     public String getCommand() {

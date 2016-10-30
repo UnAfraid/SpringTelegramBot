@@ -1,7 +1,9 @@
 package com.github.unafraid.spring.services;
 
+import com.github.unafraid.spring.bot.db.services.IUsersService;
 import com.github.unafraid.spring.bot.handlers.CommandHandler;
 import com.github.unafraid.spring.bot.handlers.impl.ICommandHandler;
+import com.github.unafraid.spring.bot.util.BotUtil;
 import com.github.unafraid.spring.config.TelegramBotConfig;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;
@@ -46,6 +48,13 @@ public class TelegramBotService extends TelegramWebhookBot {
     private static final Pattern COMMAND_ARGS_PATTERN = Pattern.compile("\"([^\"]*)\"|([^\\s]+)");
 
     private TelegramBotConfig config;
+
+    private IUsersService usersService;
+
+    @Autowired
+    public void setUsersService(IUsersService usersService) {
+        this.usersService = usersService;
+    }
 
     @Autowired
     public TelegramBotService(TelegramBotConfig config) {
@@ -124,9 +133,9 @@ public class TelegramBotService extends TelegramWebhookBot {
         for (ICommandHandler commandHandler : CommandHandler.getInstance().getHandlers()) {
             try {
                 final int id = query.getFrom().getId();
-//                if (!UsersHandler.validate(id, commandHandler.getRequiredAccessLevel())) {
-//                    continue;
-//                }
+                if (!usersService.validate(id, commandHandler.getRequiredAccessLevel())) {
+                    continue;
+                }
 
                 if (commandHandler.onCallback(this, update, query)) {
                     break;
@@ -172,11 +181,11 @@ public class TelegramBotService extends TelegramWebhookBot {
             final ICommandHandler handler = CommandHandler.getInstance().getHandler(command);
             if (handler != null) {
                 try {
-//                    final int id = message.getFrom().getId();
-//                    if (!UsersHandler.validate(id, handler.getRequiredAccessLevel())) {
-//                        BotUtil.sendMessage(this, message, message.getFrom().getUserName() + ": You are not authorized to use this function!", true, false, null);
-//                        return;
-//                    }
+                    final int id = message.getFrom().getId();
+                    if (!usersService.validate(id, handler.getRequiredAccessLevel())) {
+                        BotUtil.sendMessage(this, message, message.getFrom().getUserName() + ": You are not authorized to use this function!", true, false, null);
+                        return;
+                    }
 
                     handler.onMessage(this, message, updateId, args);
                 } catch (Exception e) {
@@ -185,10 +194,10 @@ public class TelegramBotService extends TelegramWebhookBot {
             } else {
                 for (ICommandHandler commandHandler : CommandHandler.getInstance().getHandlers()) {
                     try {
-//                        final int id = message.getFrom().getId();
-//                        if (!UsersHandler.validate(id, commandHandler.getRequiredAccessLevel())) {
-//                            continue;
-//                        }
+                        final int id = message.getFrom().getId();
+                        if (!usersService.validate(id, commandHandler.getRequiredAccessLevel())) {
+                            continue;
+                        }
 
                         if (commandHandler.onMessage(this, message, args)) {
                             break;
