@@ -5,8 +5,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
@@ -16,30 +14,17 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class AbstractEntity {
-
-    @Id
-    @GeneratedValue
-    protected Integer id;
-
     @CreatedDate
     protected LocalDateTime createdDate;
     @LastModifiedDate
     protected LocalDateTime modifiedDate;
 
-    protected AbstractEntity() {
-
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
     }
 
-    protected AbstractEntity(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public LocalDateTime getModifiedDate() {
+        return modifiedDate;
     }
 }
 

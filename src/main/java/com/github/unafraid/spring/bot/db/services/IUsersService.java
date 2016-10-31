@@ -10,6 +10,8 @@ import java.util.List;
 public interface IUsersService {
     User create(int id, String name, int level);
 
+    void update(User user);
+
     User delete(int id);
 
     User findById(int id);

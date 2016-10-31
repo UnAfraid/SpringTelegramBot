@@ -26,6 +26,13 @@ public class UsersServiceImpl implements IUsersService {
 
     @Override
     @Transactional
+    public void update(User user) {
+        usersRepository.save(user);
+    }
+
+
+    @Override
+    @Transactional
     public User delete(int id) {
         final User user = usersRepository.findOne(id);
         if (user == null) {
