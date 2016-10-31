@@ -137,6 +137,9 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
                     return false;
                 }
             }
+        } else if (type == Commands.DONE) {
+            BotUtil.editMessage(bot, query.getMessage(), "Type /users again if u wanna do some changes", false, null);
+            return true;
         }
 
         if (query.getData().equalsIgnoreCase(EditCommands.USERNAME.getName())) {
@@ -322,7 +325,8 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
         ADD("Add", 0),
         EDIT("Edit", 0),
         DELETE("Delete", 1),
-        LIST("List", 1);
+        LIST("List", 1),
+        DONE("Done", 2);
 
         private String _name;
         private int _row;
