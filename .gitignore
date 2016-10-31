@@ -20,5 +20,6 @@ gradle.properties
 .DS_Store
 .directory
 *.log
+.env
 
 src/main/resources/config/application.yml

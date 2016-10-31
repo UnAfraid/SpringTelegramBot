@@ -26,9 +26,6 @@ dependencies {
     compile("org.hibernate:hibernate-core:5.2.4.Final")
     compile("com.zaxxer:HikariCP:2.5.1")
     compile("mysql:mysql-connector-java:6.0.5")
-//    compile("org.springframework.boot:spring-boot-starter-web") {
-//        exclude module: "spring-boot-starter-tomcat"
-//    }
     compile("org.springframework.boot:spring-boot-starter-web-services") {
         exclude module: "spring-boot-starter-tomcat"
     }
@@ -38,12 +35,8 @@ dependencies {
     testCompile("junit:junit")
 }
 
+compileJava.dependsOn(clean)
 compileJava.dependsOn(processResources)
-
-war {
-
-}
-
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
@@ -55,16 +48,16 @@ def generalManifest = manifest {
             'Main-Class': 'com.github.unafraid.spring.Application')
 }
 
+war {
+
+}
 
 jar {
-    from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-    }
     manifest {
         from(generalManifest)
     }
 }
 
 task stage {
-    dependsOn build, jar
+    dependsOn build, war
 }

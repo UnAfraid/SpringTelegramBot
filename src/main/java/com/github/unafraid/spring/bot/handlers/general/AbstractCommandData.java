@@ -24,11 +24,11 @@ public abstract class AbstractCommandData {
         _state = state;
     }
 
-    public final <T extends ICommandType> T getType() {
-        return (T) _type;
+    public final ICommandType getType() {
+        return _type;
     }
 
-    public final <T extends ICommandType> void setType(T type) {
+    public final void setType(ICommandType type) {
         _type = type;
     }
 
