@@ -16,6 +16,8 @@ public interface IUsersService {
 
     User findById(int id);
 
+    User findByName(String name);
+
     List<User> findAll();
 
     default boolean validate(int id, int level) {

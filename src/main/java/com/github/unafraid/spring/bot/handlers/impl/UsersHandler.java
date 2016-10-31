@@ -78,7 +78,7 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
                     return true;
                 }
                 case 1: {
-                    final User userToEdit = usersService.findAll().stream().filter(user -> user.getName().equalsIgnoreCase(query.getData())).findFirst().orElse(null);
+                    final User userToEdit = usersService.findByName(query.getData());
                     if (userToEdit == null) {
                         return false;
                     }
@@ -97,18 +97,17 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
                     return true;
                 }
                 case 1: {
-                    final String username = query.getData();
-                    if ("Back".equalsIgnoreCase(username)) {
+                    if ("Back".equalsIgnoreCase(query.getData())) {
                         back(bot, query.getMessage(), data);
                         return true;
                     }
 
-                    final User userToDelete = usersService.findAll().stream().filter(user -> user.getName().equalsIgnoreCase(username)).findFirst().orElse(null);
+                    final User userToDelete = usersService.findByName(query.getData());
                     if (userToDelete != null) {
                         if (usersService.delete(userToDelete.getId()) != null) {
-                            BotUtil.editMessage(bot, query.getMessage(), "User " + username + " has been deleted", false, null);
+                            BotUtil.editMessage(bot, query.getMessage(), "User " + userToDelete.getName() + " has been deleted", false, null);
                         } else {
-                            BotUtil.editMessage(bot, query.getMessage(), "Failed to delete " + username, false, null);
+                            BotUtil.editMessage(bot, query.getMessage(), "Failed to delete " + query.getData(), false, null);
                         }
                         data.clear();
                         return true;
@@ -128,7 +127,7 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
                         back(bot, query.getMessage(), data);
                         return true;
                     }
-                    final User user = usersService.findAll().stream().filter(u -> u.getName().equalsIgnoreCase(query.getData())).findFirst().orElse(null);
+                    final User user = usersService.findByName(query.getData());
                     final AnswerCallbackQuery answer = new AnswerCallbackQuery();
                     answer.setText(user != null ? "User: [" + user.getId() + "](" + user.getName() + ") Level: " + user.getLevel() : "U've clicked at " + query.getData());
                     answer.setCallbackQueryId(query.getId());

@@ -49,6 +49,12 @@ public class UsersServiceImpl implements IUsersService {
     }
 
     @Override
+    @Transactional
+    public User findByName(String name) {
+        return usersRepository.findByName(name);
+    }
+
+    @Override
     public List<User> findAll() {
         return usersRepository.findAll();
     }
