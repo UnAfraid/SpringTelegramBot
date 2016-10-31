@@ -222,6 +222,16 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
                     final String text = message.getText();
                     final int level = parseInt(text, 0);
                     if (level > 0) {
+                        final User creator = usersService.findById(message.getFrom().getId());
+                        if (creator == null) {
+                            return false; // Shouldn't happen like ever..
+                        }
+
+                        if (creator.getLevel() < level) {
+                            BotUtil.sendMessage(bot, message, "You cannot create user with higher access then yours, try again!", false, false, null);
+                            return true;
+                        }
+
                         final User user = usersService.create(data.getId(), data.getName(), level);
                         if (user != null) {
                             BotUtil.sendMessage(bot, message, "User created", false, false, null);
@@ -259,6 +269,16 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
                 case 3: {
                     final int level = parseInt(message.getText(), 0);
                     if (level > 0) {
+                        final User creator = usersService.findById(message.getFrom().getId());
+                        if (creator == null) {
+                            return false; // Shouldn't happen like ever..
+                        }
+
+                        if (creator.getLevel() < level) {
+                            BotUtil.sendMessage(bot, message, "You cannot create user with higher access then yours, try again!", false, false, null);
+                            return true;
+                        }
+
                         data.getUser().setLevel(level);
                         usersService.update(data.getUser());
                         BotUtil.sendMessage(bot, message, "Done, user's level has been changed", false, false, null);
