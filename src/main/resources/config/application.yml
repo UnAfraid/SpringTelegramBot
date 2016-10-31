@@ -5,19 +5,19 @@ spring:
     datasource:
       type: com.zaxxer.hikari.HikariDataSource
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost/telegram-devices-bot?useUnicode=true&characterEncoding=utf-8
+      url: jdbc:mysql://localhost/telegram-spring-bot?useUnicode=true&characterEncoding=utf-8
       username:
       password:
 
     jpa:
-      show-sql: true
+      show-sql: false
       hibernate:
-        ddlAuto: update
+        ddlAuto: create
       properties:
         hibernate.cache.use_second_level_cache: false
         hibernate.cache.use_query_cache: false
-        hibernate.generate_statistics: true
-        hibernate.hbm2ddl.auto: validate
+        hibernate.generate_statistics: false
+        hibernate.hbm2ddl.auto: create
         hibernate.dialect: org.hibernate.dialect.MySQLDialect
 
 server:
@@ -27,3 +27,4 @@ telegram:
   token:
   username:
   path:
+

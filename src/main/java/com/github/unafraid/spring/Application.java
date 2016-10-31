@@ -39,6 +39,6 @@ public class Application extends SpringBootServletInitializer {
             CommandHandler.getInstance().addHandler(handler);
             LOGGER.info("Loaded handler: {}", handler.getClass().getSimpleName());
         });
-        LoggerFactory.getLogger(Application.class).info("Loaded {} handlers", handlers.size());
+        LOGGER.info("Loaded {} handlers", handlers.size());
     }
 }
