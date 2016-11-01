@@ -1,11 +1,11 @@
 package com.github.unafraid.spring.bot.handlers.impl;
 
-import com.github.unafraid.spring.bot.db.model.User;
-import com.github.unafraid.spring.bot.db.services.IUsersService;
 import com.github.unafraid.spring.bot.handlers.general.AbstractCommandData;
 import com.github.unafraid.spring.bot.handlers.general.AbstractInlineMenu;
 import com.github.unafraid.spring.bot.handlers.general.ICommandType;
 import com.github.unafraid.spring.bot.util.BotUtil;
+import com.github.unafraid.spring.model.User;
+import com.github.unafraid.spring.services.UsersService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -32,7 +32,7 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
     private static final Logger LOGGER = LoggerFactory.getLogger(UsersHandler.class);
 
     @Inject
-    private IUsersService usersService;
+    private UsersService usersService;
 
     @Override
     public String getCommand() {

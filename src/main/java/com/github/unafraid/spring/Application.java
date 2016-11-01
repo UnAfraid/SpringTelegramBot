@@ -23,7 +23,7 @@ import java.util.Map;
 @SpringBootApplication
 @EnableConfigurationProperties({TelegramBotConfig.class})
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = {"com.github.unafraid.spring.bot.db.repositories"})
+@EnableJpaRepositories(basePackages = {"com.github.unafraid.spring.repositories"})
 public class Application extends SpringBootServletInitializer {
     private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 

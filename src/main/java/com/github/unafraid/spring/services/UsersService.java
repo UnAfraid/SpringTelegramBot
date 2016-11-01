@@ -1,7 +1,7 @@
-package com.github.unafraid.spring.bot.db.services;
+package com.github.unafraid.spring.services;
 
-import com.github.unafraid.spring.bot.db.model.User;
-import com.github.unafraid.spring.bot.db.repositories.UsersRepository;
+import com.github.unafraid.spring.model.User;
+import com.github.unafraid.spring.repositories.UsersRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,26 +12,23 @@ import java.util.List;
  * Created by UnAfraid on 29.10.2016 г..
  */
 @Service
-public class UsersServiceImpl implements IUsersService {
+public class UsersService {
 
     @Resource
     private UsersRepository usersRepository;
 
-    @Override
     @Transactional
     public User create(int id, String name, int level) {
         final User user = new User(id, name, level);
         return usersRepository.save(user);
     }
 
-    @Override
     @Transactional
     public void update(User user) {
         usersRepository.save(user);
     }
 
 
-    @Override
     @Transactional
     public User delete(int id) {
         final User user = usersRepository.findOne(id);
@@ -42,20 +39,26 @@ public class UsersServiceImpl implements IUsersService {
         return user;
     }
 
-    @Override
     @Transactional
     public User findById(int id) {
         return usersRepository.findOne(id);
     }
 
-    @Override
     @Transactional
     public User findByName(String name) {
         return usersRepository.findByName(name);
     }
 
-    @Override
     public List<User> findAll() {
         return usersRepository.findAll();
+    }
+
+    public boolean validate(int id, int level) {
+        if (level == 0) {
+            return true;
+        }
+
+        final User user = findById(id);
+        return (user != null) && (user.getLevel() >= level);
     }
 }

@@ -1,6 +1,6 @@
-package com.github.unafraid.spring.bot.db.repositories;
+package com.github.unafraid.spring.repositories;
 
-import com.github.unafraid.spring.bot.db.model.User;
+import com.github.unafraid.spring.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

@@ -1,7 +1,7 @@
 package com.github.unafraid.spring.bot.handlers.impl;
 
-import com.github.unafraid.spring.bot.db.services.IUsersService;
 import com.github.unafraid.spring.bot.util.BotUtil;
+import com.github.unafraid.spring.services.UsersService;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.bots.AbsSender;
@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 public final class StartHandler implements ICommandHandler {
     @Inject
-    private IUsersService usersService;
+    private UsersService usersService;
 
     @Override
     public String getCommand() {

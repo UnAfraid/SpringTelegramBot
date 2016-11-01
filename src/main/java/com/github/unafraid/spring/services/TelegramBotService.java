@@ -1,6 +1,5 @@
 package com.github.unafraid.spring.services;
 
-import com.github.unafraid.spring.bot.db.services.IUsersService;
 import com.github.unafraid.spring.bot.handlers.CommandHandler;
 import com.github.unafraid.spring.bot.handlers.impl.ICommandHandler;
 import com.github.unafraid.spring.bot.util.BotUtil;
@@ -50,7 +49,7 @@ public class TelegramBotService extends TelegramWebhookBot {
     private TelegramBotConfig config;
 
     @Inject
-    private IUsersService usersService;
+    private UsersService usersService;
 
     @Inject
     public TelegramBotService(TelegramBotConfig config) {
@@ -71,8 +70,8 @@ public class TelegramBotService extends TelegramWebhookBot {
                     .setConnectTimeout(SOCKET_TIMEOUT)
                     .setConnectionRequestTimeout(SOCKET_TIMEOUT);
 
-            final HttpPost httppost = new HttpPost(url);
-            httppost.setConfig(configBuilder.build());
+            final HttpPost post = new HttpPost(url);
+            post.setConfig(configBuilder.build());
             final MultipartEntityBuilder builder = MultipartEntityBuilder.create();
             builder.addTextBody(SetWebhook.URL_FIELD, getBotPath());
             //  if (publicCertificatePath != null) {
@@ -81,8 +80,8 @@ public class TelegramBotService extends TelegramWebhookBot {
             //          builder.addBinaryBody(SetWebhook.CERTIFICATE_FIELD, certificate, ContentType.TEXT_PLAIN, certificate.getName());
             //      }
             //  }
-            httppost.setEntity(builder.build());
-            try (CloseableHttpResponse response = httpclient.execute(httppost)) {
+            post.setEntity(builder.build());
+            try (CloseableHttpResponse response = httpclient.execute(post)) {
                 final HttpEntity ht = response.getEntity();
                 final BufferedHttpEntity buf = new BufferedHttpEntity(ht);
                 final String responseContent = EntityUtils.toString(buf, StandardCharsets.UTF_8);
@@ -184,6 +183,8 @@ public class TelegramBotService extends TelegramWebhookBot {
                     }
 
                     handler.onMessage(this, message, updateId, args);
+                } catch (TelegramApiRequestException e) {
+                    LOGGER.warn("API Exception caught on handler: {}, response: {} message: {}", handler.getClass().getSimpleName(), e.getApiResponse(), message, e);
                 } catch (Exception e) {
                     LOGGER.warn("Exception caught on handler: {}, message: {}", handler.getClass().getSimpleName(), message, e);
                 }
@@ -198,8 +199,10 @@ public class TelegramBotService extends TelegramWebhookBot {
                         if (commandHandler.onMessage(this, message, args)) {
                             break;
                         }
+                    } catch (TelegramApiRequestException e) {
+                        LOGGER.warn("API Exception caught on handler: {}, response: {} message: {}", handler.getClass().getSimpleName(), e.getApiResponse(), message, e);
                     } catch (Exception e) {
-                        LOGGER.warn("Exception caught on handler: {}, message: {}", commandHandler.getClass().getSimpleName(), message, e);
+                        LOGGER.warn("Exception caught on handler: {}, message: {}", handler.getClass().getSimpleName(), message, e);
                     }
                 }
             }

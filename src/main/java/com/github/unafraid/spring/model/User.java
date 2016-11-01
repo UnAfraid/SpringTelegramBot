@@ -1,4 +1,4 @@
-package com.github.unafraid.spring.bot.db.model;
+package com.github.unafraid.spring.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
