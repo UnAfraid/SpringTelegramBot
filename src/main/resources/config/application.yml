@@ -3,7 +3,6 @@ spring:
         name: telegram-bot
 
     datasource:
-      type: com.zaxxer.hikari.HikariDataSource
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: ${JDBC_URL}
       username: ${JDBC_USERNAME}

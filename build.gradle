@@ -24,7 +24,6 @@ dependencies {
     compile("org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Draft-16")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.hibernate:hibernate-core:5.2.4.Final")
-    compile("com.zaxxer:HikariCP:2.5.1")
     compile("mysql:mysql-connector-java:6.0.5")
     compile("org.springframework.boot:spring-boot-starter-web-services") {
         exclude module: "spring-boot-starter-tomcat"
