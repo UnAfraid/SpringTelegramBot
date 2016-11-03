@@ -1,6 +1,6 @@
-package com.github.unafraid.spring.bot.handlers.general;
+package com.github.unafraid.spring.bot.handlers.general.inline;
 
-import com.github.unafraid.spring.bot.handlers.impl.ICommandHandler;
+import com.github.unafraid.spring.bot.handlers.general.*;
 import com.github.unafraid.spring.bot.util.BotUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,17 +20,17 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by UnAfraid on 30.10.2016 г..
  */
-public abstract class AbstractInlineMenu<T extends AbstractCommandData> implements ICommandHandler {
+public abstract class AbstractInlineMenu<T extends AbstractCommandData> implements ICommandHandler, IAccessLevelHandler, IMessageHandler, ICallbackQueryHandler, ICancelHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractInlineMenu.class);
-    private final List<ICommandType> _commands = new ArrayList<>();
+    private final List<IInlineCommandType> _commands = new ArrayList<>();
     private final Map<Integer, T> _data = new ConcurrentHashMap<>();
 
-    protected void addCommand(ICommandType type) {
+    protected void addCommand(IInlineCommandType type) {
         _commands.add(type);
     }
 
     @Override
-    public boolean onMessage(AbsSender bot, Update update, Message message, List<String> args) throws TelegramApiException {
+    public boolean onMessage(AbsSender bot, Update update, Message message) throws TelegramApiException {
         final T data = _data.computeIfAbsent(message.getFrom().getId(), this::createData);
         return onMessageInput(bot, message, data);
     }
@@ -50,7 +50,7 @@ public abstract class AbstractInlineMenu<T extends AbstractCommandData> implemen
     @Override
     public boolean onCallbackQuery(AbsSender bot, Update update, CallbackQuery query) throws TelegramApiException {
         final T data = _data.computeIfAbsent(query.getFrom().getId(), this::createData);
-        final ICommandType type = getCommandType(query.getData(), _commands);
+        final IInlineCommandType type = getCommandType(query.getData(), _commands);
         if (type != null) {
             data.setType(type);
             if (!type.getSubCommands().isEmpty()) {
@@ -69,13 +69,13 @@ public abstract class AbstractInlineMenu<T extends AbstractCommandData> implemen
         _data.clear();
     }
 
-    private ICommandType getCommandType(String text, List<ICommandType> commands) {
-        for (ICommandType command : commands) {
+    private IInlineCommandType getCommandType(String text, List<IInlineCommandType> commands) {
+        for (IInlineCommandType command : commands) {
             if (text.equalsIgnoreCase(command.getName())) {
                 return command;
             }
 
-            final ICommandType cmd = getCommandType(text, command.getSubCommands());
+            final IInlineCommandType cmd = getCommandType(text, command.getSubCommands());
             if (cmd != null) {
                 return cmd;
             }
@@ -95,7 +95,7 @@ public abstract class AbstractInlineMenu<T extends AbstractCommandData> implemen
 
     protected abstract T createData(int ownerId);
 
-    protected InlineKeyboardMarkup generateMenu(List<ICommandType> commands) throws TelegramApiException {
+    protected InlineKeyboardMarkup generateMenu(List<IInlineCommandType> commands) throws TelegramApiException {
         final InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         commands.forEach(command ->
         {

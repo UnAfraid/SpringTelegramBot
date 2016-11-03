@@ -1,6 +1,8 @@
 package com.github.unafraid.spring.bot.handlers.impl;
 
-import com.github.unafraid.spring.bot.handlers.CommandHandler;
+import com.github.unafraid.spring.bot.handlers.general.CommandHandler;
+import com.github.unafraid.spring.bot.handlers.general.IAccessLevelHandler;
+import com.github.unafraid.spring.bot.handlers.general.ICommandHandler;
 import com.github.unafraid.spring.bot.util.BotUtil;
 import com.github.unafraid.spring.services.UsersService;
 import org.springframework.stereotype.Service;
@@ -40,18 +42,13 @@ public final class HelpHandler implements ICommandHandler {
 
     @Override
     public void onCommandMessage(AbsSender bot, Update update, Message message, List<String> args) throws TelegramApiException {
-        final int id = message.getFrom().getId();
         if (args.isEmpty()) {
             final StringBuilder sb = new StringBuilder();
             final Map<String, List<String>> help = new LinkedHashMap<>();
             CommandHandler.getInstance().getHandlers()
                     .stream()
-                    .filter(handler -> usersService.validate(id, handler.getRequiredAccessLevel()))
-                    .forEach(handler ->
-                    {
-                        final String line = handler.getCommand() + " - " + handler.getDescription();
-                        help.computeIfAbsent(handler.getCategory(), key -> new ArrayList<>()).add(line);
-                    });
+                    .filter(handler -> IAccessLevelHandler.validate(handler, message.getFrom().getId(), usersService))
+                    .forEach(handler -> help.computeIfAbsent(handler.getCategory(), key -> new ArrayList<>()).add(handler.getCommand() + " - " + handler.getDescription()));
 
             help.entrySet().forEach(entry ->
             {

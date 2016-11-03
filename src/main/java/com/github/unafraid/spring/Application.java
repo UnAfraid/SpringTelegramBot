@@ -1,7 +1,7 @@
 package com.github.unafraid.spring;
 
-import com.github.unafraid.spring.bot.handlers.CommandHandler;
-import com.github.unafraid.spring.bot.handlers.impl.ICommandHandler;
+import com.github.unafraid.spring.bot.handlers.general.CommandHandler;
+import com.github.unafraid.spring.bot.handlers.general.ICommandHandler;
 import com.github.unafraid.spring.config.TelegramBotConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

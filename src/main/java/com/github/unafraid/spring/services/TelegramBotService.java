@@ -1,8 +1,8 @@
 package com.github.unafraid.spring.services;
 
-import com.github.unafraid.spring.bot.handlers.CommandHandler;
-import com.github.unafraid.spring.bot.handlers.impl.ICommandHandler;
+import com.github.unafraid.spring.bot.handlers.general.*;
 import com.github.unafraid.spring.bot.util.BotUtil;
+import com.github.unafraid.spring.bot.util.IThrowableFunction;
 import com.github.unafraid.spring.config.TelegramBotConfig;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,8 +15,10 @@ import org.telegram.telegrambots.api.methods.updates.SetWebhook;
 import org.telegram.telegrambots.api.objects.CallbackQuery;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
+import org.telegram.telegrambots.api.objects.User;
+import org.telegram.telegrambots.api.objects.inlinequery.ChosenInlineQuery;
+import org.telegram.telegrambots.api.objects.inlinequery.InlineQuery;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
-import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.exceptions.TelegramApiRequestException;
 
 import javax.inject.Inject;
@@ -29,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -102,23 +105,20 @@ public class TelegramBotService extends TelegramWebhookBot {
         if (update != null) {
             try {
                 if (update.hasChosenInlineQuery()) {
-                    // TODO: handleChosenInlineQuery
-                    LOGGER.warn("ChosenInlineQuery is not handled yet: Update: {}", update);
+                    // Handle Chosen inline query
+                    handleUpdate(IChosenInlineQueryHandler.class, update, Update::getChosenInlineQuery, ChosenInlineQuery::getFrom, handler -> handler.onChosenInlineQuery(this, update, update.getChosenInlineQuery()));
                 } else if (update.hasInlineQuery()) {
-                    // TODO: handleInlineQuery
-                    LOGGER.warn("InlineQuery is not handled yet: Update: {}", update);
-                } else if (update.hasEditedMessage()) {
-                    // TODO: handleEditedMessage
-                    LOGGER.warn("EditedMessage is not handled yet: Update: {}", update);
+                    // Handle inline query
+                    handleUpdate(IInlineQueryHandler.class, update, Update::getInlineQuery, InlineQuery::getFrom, handler -> handler.onInlineQuery(this, update, update.getInlineQuery()));
                 } else if (update.hasCallbackQuery()) {
-                    handleIncomingCallQuery(update);
+                    // Handle callback query
+                    handleUpdate(ICallbackQueryHandler.class, update, Update::getCallbackQuery, CallbackQuery::getFrom, handler -> handler.onCallbackQuery(this, update, update.getCallbackQuery()));
+                } else if (update.hasEditedMessage()) {
+                    // Handle edited message
+                    handleUpdate(IEditedMessageHandler.class, update, Update::getEditedMessage, Message::getFrom, handler -> handler.onEditMessage(this, update, update.getEditedMessage()));
                 } else if (update.hasMessage()) {
-                    final Message message = update.getMessage();
-                    if (message.hasText()) {
-                        handleIncomingMessage(update, message);
-                    } else {
-                        LOGGER.warn("Message doesn't have text Update: {}", update);
-                    }
+                    // Handle message
+                    handleIncomingMessage(update);
                 } else {
                     LOGGER.warn("Update doesn't contains neither ChosenInlineQuery/InlineQuery/CallbackQuery/EditedMessage/Message Update: {}", update);
                 }
@@ -129,32 +129,35 @@ public class TelegramBotService extends TelegramWebhookBot {
         return null;
     }
 
-    private void handleIncomingCallQuery(Update update) {
-        final CallbackQuery query = update.getCallbackQuery();
+    private <T, R> void handleUpdate(Class<T> clazz, Update update, Function<Update, R> dataMapper, Function<R, User> idMapper, IThrowableFunction<T, Boolean> action) {
+        final R query = dataMapper.apply(update);
         if (query == null) {
             return;
         }
 
-        for (ICommandHandler commandHandler : CommandHandler.getInstance().getHandlers()) {
+        final User user = idMapper.apply(query);
+        final List<T> handlers = CommandHandler.getInstance().getHandlers(clazz, user.getId(), usersService);
+        for (T handler : handlers) {
             try {
-                if (!usersService.validate(query.getFrom().getId(), commandHandler.getRequiredAccessLevel())) {
-                    continue;
-                }
-
-                if (commandHandler.onCallbackQuery(this, update, query)) {
+                if (action.apply(handler)) {
                     break;
                 }
             } catch (TelegramApiRequestException e) {
-                LOGGER.warn("Exception caught on handler: {} error: {}", commandHandler.getClass().getSimpleName(), e.getApiResponse(), e);
-            } catch (TelegramApiException e) {
-                LOGGER.warn("Exception caught on handler: {}", commandHandler.getClass().getSimpleName(), e);
+                LOGGER.warn("Exception caught on handler: {} error: {}", handler.getClass().getSimpleName(), e.getApiResponse(), e);
+            } catch (Exception e) {
+                LOGGER.warn("Exception caught on handler: {}", handler.getClass().getSimpleName(), e);
             }
         }
     }
 
-    private void handleIncomingMessage(Update update, Message message) {
+    private void handleIncomingMessage(Update update) {
+        final Message message = update.getMessage();
+        if (message == null) {
+            return;
+        }
+
         String text = message.getText();
-        if (text == null) {
+        if (text == null || text.isEmpty()) {
             return;
         }
 
@@ -188,7 +191,7 @@ public class TelegramBotService extends TelegramWebhookBot {
             final ICommandHandler handler = CommandHandler.getInstance().getHandler(command);
             if (handler != null) {
                 try {
-                    if (!usersService.validate(message.getFrom().getId(), handler.getRequiredAccessLevel())) {
+                    if (!IAccessLevelHandler.validate(handler, message.getFrom().getId(), usersService)) {
                         BotUtil.sendMessage(this, message, message.getFrom().getUserName() + ": You are not authorized to use this function!", true, false, null);
                         return;
                     }
@@ -200,19 +203,15 @@ public class TelegramBotService extends TelegramWebhookBot {
                     LOGGER.warn("Exception caught on handler: {}, message: {}", handler.getClass().getSimpleName(), message, e);
                 }
             } else {
-                for (ICommandHandler commandHandler : CommandHandler.getInstance().getHandlers()) {
+                for (IMessageHandler messageHandler : CommandHandler.getInstance().getHandlers(IMessageHandler.class, message.getFrom().getId(), usersService)) {
                     try {
-                        if (!usersService.validate(message.getFrom().getId(), commandHandler.getRequiredAccessLevel())) {
-                            continue;
-                        }
-
-                        if (commandHandler.onMessage(this, update, message, args)) {
+                        if (messageHandler.onMessage(this, update, message)) {
                             break;
                         }
                     } catch (TelegramApiRequestException e) {
-                        LOGGER.warn("API Exception caught on handler: {}, response: {} message: {}", commandHandler.getClass().getSimpleName(), e.getApiResponse(), message, e);
+                        LOGGER.warn("API Exception caught on handler: {}, response: {} message: {}", messageHandler.getClass().getSimpleName(), e.getApiResponse(), message, e);
                     } catch (Exception e) {
-                        LOGGER.warn("Exception caught on handler: {}, message: {}", commandHandler.getClass().getSimpleName(), message, e);
+                        LOGGER.warn("Exception caught on handler: {}, message: {}", messageHandler.getClass().getSimpleName(), message, e);
                     }
                 }
             }

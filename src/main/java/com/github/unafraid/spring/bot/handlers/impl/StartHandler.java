@@ -1,5 +1,6 @@
 package com.github.unafraid.spring.bot.handlers.impl;
 
+import com.github.unafraid.spring.bot.handlers.general.ICommandHandler;
 import com.github.unafraid.spring.bot.util.BotUtil;
 import com.github.unafraid.spring.services.UsersService;
 import org.springframework.stereotype.Service;

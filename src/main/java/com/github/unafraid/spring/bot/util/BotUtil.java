@@ -1,6 +1,6 @@
 package com.github.unafraid.spring.bot.util;
 
-import com.github.unafraid.spring.bot.handlers.impl.ICommandHandler;
+import com.github.unafraid.spring.bot.handlers.general.ICommandHandler;
 import org.telegram.telegrambots.api.methods.ActionType;
 import org.telegram.telegrambots.api.methods.send.SendChatAction;
 import org.telegram.telegrambots.api.methods.send.SendMessage;

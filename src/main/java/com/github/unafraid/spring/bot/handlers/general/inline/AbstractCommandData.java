@@ -1,4 +1,4 @@
-package com.github.unafraid.spring.bot.handlers.general;
+package com.github.unafraid.spring.bot.handlers.general.inline;
 
 /**
  * Created by UnAfraid on 30.10.2016 г..
@@ -6,7 +6,7 @@ package com.github.unafraid.spring.bot.handlers.general;
 public abstract class AbstractCommandData {
     private final int _ownerId;
     private int _state;
-    private ICommandType _type;
+    private IInlineCommandType _type;
 
     public AbstractCommandData(int ownerId) {
         _ownerId = ownerId;
@@ -24,11 +24,11 @@ public abstract class AbstractCommandData {
         _state = state;
     }
 
-    public final ICommandType getType() {
+    public final IInlineCommandType getType() {
         return _type;
     }
 
-    public final void setType(ICommandType type) {
+    public final void setType(IInlineCommandType type) {
         _type = type;
     }
 

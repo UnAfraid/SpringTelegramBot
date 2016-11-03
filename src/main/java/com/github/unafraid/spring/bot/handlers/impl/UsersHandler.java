@@ -1,8 +1,8 @@
 package com.github.unafraid.spring.bot.handlers.impl;
 
-import com.github.unafraid.spring.bot.handlers.general.AbstractCommandData;
-import com.github.unafraid.spring.bot.handlers.general.AbstractInlineMenu;
-import com.github.unafraid.spring.bot.handlers.general.ICommandType;
+import com.github.unafraid.spring.bot.handlers.general.inline.AbstractCommandData;
+import com.github.unafraid.spring.bot.handlers.general.inline.AbstractInlineMenu;
+import com.github.unafraid.spring.bot.handlers.general.inline.IInlineCommandType;
 import com.github.unafraid.spring.bot.util.BotUtil;
 import com.github.unafraid.spring.model.User;
 import com.github.unafraid.spring.services.UsersService;
@@ -58,7 +58,7 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
 
     @Override
     protected boolean onMenuSelect(AbsSender bot, Update update, CallbackQuery query, UserData data) throws TelegramApiException {
-        final ICommandType type = data.getType();
+        final IInlineCommandType type = data.getType();
         if (type == null) {
             return false;
         }
@@ -191,7 +191,7 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
 
     @Override
     protected boolean onMessageInput(AbsSender bot, Message message, UserData data) throws TelegramApiException {
-        final ICommandType type = data.getType();
+        final IInlineCommandType type = data.getType();
         if (type == Commands.ADD) {
             switch (data.getState()) {
                 case 1: {
@@ -322,7 +322,7 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
         }
     }
 
-    private enum Commands implements ICommandType {
+    private enum Commands implements IInlineCommandType {
         ADD("Add", 0),
         EDIT("Edit", 0),
         DELETE("Delete", 1),
@@ -331,7 +331,7 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
 
         private String _name;
         private int _row;
-        private List<ICommandType> _subCommands = new ArrayList<>();
+        private List<IInlineCommandType> _subCommands = new ArrayList<>();
 
         Commands(String name, int row) {
             _name = name;
@@ -350,19 +350,19 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
             return _row;
         }
 
-        public List<ICommandType> getSubCommands() {
+        public List<IInlineCommandType> getSubCommands() {
             return _subCommands;
         }
     }
 
-    private enum EditCommands implements ICommandType {
+    private enum EditCommands implements IInlineCommandType {
         USERNAME("Username", 0),
         LEVEL("Level", 0),
         BACK("Back", 1);
 
         private String _name;
         private int _row;
-        private List<ICommandType> _subCommands = new ArrayList<>();
+        private List<IInlineCommandType> _subCommands = new ArrayList<>();
 
         EditCommands(String name, int row) {
             _name = name;
@@ -377,7 +377,7 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
             return _row;
         }
 
-        public List<ICommandType> getSubCommands() {
+        public List<IInlineCommandType> getSubCommands() {
             return _subCommands;
         }
     }

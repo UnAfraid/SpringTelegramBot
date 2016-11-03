@@ -1,10 +1,12 @@
-package com.github.unafraid.spring.bot.handlers;
+package com.github.unafraid.spring.bot.handlers.general;
 
-import com.github.unafraid.spring.bot.handlers.impl.ICommandHandler;
+import com.github.unafraid.spring.services.UsersService;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * @author UnAfraid
@@ -25,6 +27,14 @@ public final class CommandHandler {
 
     public Collection<ICommandHandler> getHandlers() {
         return _handlers.values();
+    }
+
+    public <T> List<T> getHandlers(Class<T> clazz, int id, UsersService usersService) {
+        return _handlers.values().stream()
+                .filter(clazz::isInstance)
+                .map(clazz::cast)
+                .filter(messageHandler -> IAccessLevelHandler.validate(messageHandler, id, usersService))
+                .collect(Collectors.toList());
     }
 
     public static CommandHandler getInstance() {
