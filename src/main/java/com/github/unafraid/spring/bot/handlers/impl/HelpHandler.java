@@ -5,6 +5,7 @@ import com.github.unafraid.spring.bot.util.BotUtil;
 import com.github.unafraid.spring.services.UsersService;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.api.objects.Message;
+import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
@@ -38,7 +39,7 @@ public final class HelpHandler implements ICommandHandler {
     }
 
     @Override
-    public void onMessage(AbsSender bot, Message message, int updateId, List<String> args) throws TelegramApiException {
+    public void onCommandMessage(AbsSender bot, Update update, Message message, List<String> args) throws TelegramApiException {
         final int id = message.getFrom().getId();
         if (args.isEmpty()) {
             final StringBuilder sb = new StringBuilder();

@@ -1,8 +1,6 @@
 package com.github.unafraid.spring.bot.util;
 
 import com.github.unafraid.spring.bot.handlers.impl.ICommandHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.api.methods.ActionType;
 import org.telegram.telegrambots.api.methods.send.SendChatAction;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
@@ -16,53 +14,14 @@ import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboar
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.lang.management.ManagementFactory;
-import java.lang.management.RuntimeMXBean;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.function.Supplier;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 /**
  * @author UnAfraid
  */
 public class BotUtil {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BotUtil.class);
-
-    public static <T> T initialize(Supplier<T> providerOne, Supplier<T> providerTwo) {
-        try {
-            final T one = providerOne.get();
-            return one;
-        } catch (Exception e) {
-            LOGGER.warn("Failed to initialize first class: {} attempting to initialize second: {}", providerOne, providerTwo);
-            try {
-                final T two = providerTwo.get();
-                return two;
-            } catch (Exception e2) {
-                LOGGER.warn("Failed to initialize second class: {}", providerTwo);
-            }
-        }
-        return null;
-    }
-
-    public static int parseInt(String intValue, int defaultValue) {
-        try {
-            return Integer.parseInt(intValue);
-        } catch (Exception e) {
-            return defaultValue;
-        }
-    }
-
     public static void sendAction(AbsSender bot, Message message, ActionType actionType) throws TelegramApiException {
         final SendChatAction sendAction = new SendChatAction();
         sendAction.setChatId(Long.toString(message.getChat().getId()));
@@ -124,26 +83,6 @@ public class BotUtil {
         bot.sendPhoto(photo);
     }
 
-    public static boolean sendIcon(String fileName, AbsSender bot, Message message, boolean useCaption) throws IOException, TelegramApiException {
-        sendAction(bot, message, ActionType.UPLOADPHOTO);
-
-        try (ZipInputStream zipInputStream = new ZipInputStream(BotUtil.class.getResourceAsStream("/images.zip"))) {
-            final String iconName = fileName + ".png";
-            ZipEntry entry;
-            while ((entry = zipInputStream.getNextEntry()) != null) {
-                if (entry.getName().equalsIgnoreCase(iconName)) {
-                    if (useCaption) {
-                        sendPhoto(bot, message, iconName, iconName, zipInputStream);
-                    } else {
-                        sendPhoto(bot, message, null, iconName, zipInputStream);
-                    }
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     public static InlineKeyboardButton createButton(String text) {
         return new InlineKeyboardButton().setText(text).setCallbackData(text);
     }
@@ -159,13 +98,12 @@ public class BotUtil {
         if (date == null) {
             return null;
         }
-        final DateFormat dateFormat = new SimpleDateFormat(format);
-        return dateFormat.format(date);
+        return new SimpleDateFormat(format).format(date);
     }
 
     /**
      * @param string
-     * @return
+     * @return {@code true} if the text is integer, {@code false} otherwise
      */
     public static boolean isDigit(String string) {
         try {
@@ -176,28 +114,16 @@ public class BotUtil {
         return true;
     }
 
-    public static int getPID() {
+    /**
+     * @param intValue
+     * @param defaultValue
+     * @return the int from the given string or defaultValue in case its not an int
+     */
+    public static int parseInt(String intValue, int defaultValue) {
         try {
-            final RuntimeMXBean runtime = ManagementFactory.getRuntimeMXBean();
-            final Field jvmField = runtime.getClass().getDeclaredField("jvm");
-            jvmField.setAccessible(true);
-
-            final Object mgmt = jvmField.get(runtime);
-            final Method pidMethod = mgmt.getClass().getDeclaredMethod("getProcessId");
-            pidMethod.setAccessible(true);
-
-            return (Integer) pidMethod.invoke(mgmt);
+            return Integer.parseInt(intValue);
         } catch (Exception e) {
-            LOGGER.warn("Couldn't find PID", e);
-        }
-        return -1;
-    }
-
-    public static final void writePID(File pid) {
-        try {
-            Files.write(pid.toPath(), String.valueOf(BotUtil.getPID()).getBytes(StandardCharsets.UTF_8), StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
-        } catch (Exception e) {
-            LOGGER.warn("Couldn't write PID", e);
+            return defaultValue;
         }
     }
 }

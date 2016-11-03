@@ -6,8 +6,6 @@ import com.github.unafraid.spring.bot.handlers.general.ICommandType;
 import com.github.unafraid.spring.bot.util.BotUtil;
 import com.github.unafraid.spring.model.User;
 import com.github.unafraid.spring.services.UsersService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.api.objects.CallbackQuery;
@@ -21,6 +19,7 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,8 +28,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UsersHandler.class);
-
     @Inject
     private UsersService usersService;
 
@@ -54,7 +51,7 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
         return 7;
     }
 
-    protected UsersHandler() {
+    UsersHandler() {
         // Add Commands
         Arrays.stream(Commands.values()).forEach(this::addCommand);
     }
@@ -73,7 +70,7 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
         } else if (type == Commands.EDIT) {
             switch (data.getState()) {
                 case 0: {
-                    sendUserButtons(bot, query, data);
+                    sendUserButtons(bot, query);
                     data.setState(1);
                     return true;
                 }
@@ -92,7 +89,7 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
         } else if (type == Commands.DELETE) {
             switch (data.getState()) {
                 case 0: {
-                    sendUserButtons(bot, query, data);
+                    sendUserButtons(bot, query);
                     data.setState(1);
                     return true;
                 }
@@ -118,7 +115,7 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
         } else if (type == Commands.LIST) {
             switch (data.getState()) {
                 case 0: {
-                    sendUserButtons(bot, query, data);
+                    sendUserButtons(bot, query);
                     data.setState(1);
                     return true;
                 }
@@ -178,7 +175,7 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
         return false;
     }
 
-    private void sendUserButtons(AbsSender bot, CallbackQuery query, UserData data) throws TelegramApiException {
+    private void sendUserButtons(AbsSender bot, CallbackQuery query) throws TelegramApiException {
         final InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         final List<List<InlineKeyboardButton>> buttons = markup.getKeyboard();
         usersService.findAll().forEach(user ->
@@ -188,7 +185,7 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
             }
             buttons.get(buttons.size() - 1).add(BotUtil.createButton(user.getName()));
         });
-        markup.getKeyboard().add(Arrays.asList(BotUtil.createButton("Back")));
+        markup.getKeyboard().add(Collections.singletonList(BotUtil.createButton("Back")));
         BotUtil.editMessage(bot, query.getMessage(), "Tell me that user's id", false, markup);
     }
 
@@ -199,7 +196,7 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
             switch (data.getState()) {
                 case 1: {
                     final String text = message.getText();
-                    final int id = parseInt(text, 0);
+                    final int id = BotUtil.parseInt(text, 0);
                     if (id > 0) {
                         data.setId(id);
                         data.setState(2);
@@ -220,7 +217,7 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
                 }
                 case 3: {
                     final String text = message.getText();
-                    final int level = parseInt(text, 0);
+                    final int level = BotUtil.parseInt(text, 0);
                     if (level > 0) {
                         final User creator = usersService.findById(message.getFrom().getId());
                         if (creator == null) {
@@ -244,12 +241,6 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
                     return false;
                 }
             }
-        } else if (type == Commands.EDIT) {
-
-        } else if (type == Commands.DELETE) {
-
-        } else if (type == Commands.LIST) {
-
         } else if (type == EditCommands.USERNAME) {
             switch (data.getState()) {
                 case 3: {
@@ -267,7 +258,7 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
         } else if (type == EditCommands.LEVEL) {
             switch (data.getState()) {
                 case 3: {
-                    final int level = parseInt(message.getText(), 0);
+                    final int level = BotUtil.parseInt(message.getText(), 0);
                     if (level > 0) {
                         final User creator = usersService.findById(message.getFrom().getId());
                         if (creator == null) {
@@ -297,50 +288,41 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
         return new UserData(ownerId);
     }
 
-    private int parseInt(String text, int defaultValue) {
-        try {
-            int id = Integer.parseInt(text);
-            return id;
-        } catch (Exception e) {
-        }
-        return defaultValue;
-    }
-
     static class UserData extends AbstractCommandData {
         private int _id;
         private String _name;
         private User _user;
 
-        public UserData(int ownerId) {
+        UserData(int ownerId) {
             super(ownerId);
         }
 
-        public int getId() {
+        int getId() {
             return _id;
         }
 
-        public void setId(int id) {
+        void setId(int id) {
             _id = id;
         }
 
-        public String getName() {
+        String getName() {
             return _name;
         }
 
-        public void setName(String name) {
+        void setName(String name) {
             _name = name;
         }
 
-        public void setUser(User user) {
+        void setUser(User user) {
             _user = user;
         }
 
-        public User getUser() {
+        User getUser() {
             return _user;
         }
     }
 
-    enum Commands implements ICommandType {
+    private enum Commands implements ICommandType {
         ADD("Add", 0),
         EDIT("Edit", 0),
         DELETE("Delete", 1),
@@ -373,7 +355,7 @@ public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
         }
     }
 
-    enum EditCommands implements ICommandType {
+    private enum EditCommands implements ICommandType {
         USERNAME("Username", 0),
         LEVEL("Level", 0),
         BACK("Back", 1);

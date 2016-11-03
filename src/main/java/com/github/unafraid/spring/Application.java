@@ -34,6 +34,8 @@ public class Application extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         final ConfigurableApplicationContext context = SpringApplication.run(Application.class);
+
+        // Handlers setup
         final Map<String, ICommandHandler> handlers = context.getBeansOfType(ICommandHandler.class);
         handlers.values().forEach(handler -> {
             CommandHandler.getInstance().addHandler(handler);

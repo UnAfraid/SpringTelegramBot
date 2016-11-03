@@ -17,7 +17,7 @@ public class MainController {
 
     @RequestMapping(value = "/bot", method = RequestMethod.POST)
     @ResponseBody
-    public BotApiMethod onUpdateReceived(@RequestBody Update update) {
+    public BotApiMethod<?> onUpdateReceived(@RequestBody Update update) {
         return telegramBotService.onWebhookUpdateReceived(update);
     }
 }

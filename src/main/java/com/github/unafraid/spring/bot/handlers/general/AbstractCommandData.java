@@ -4,7 +4,7 @@ package com.github.unafraid.spring.bot.handlers.general;
  * Created by UnAfraid on 30.10.2016 г..
  */
 public abstract class AbstractCommandData {
-    private int _ownerId;
+    private final int _ownerId;
     private int _state;
     private ICommandType _type;
 
@@ -32,7 +32,7 @@ public abstract class AbstractCommandData {
         _type = type;
     }
 
-    public void clear() {
+    public final void clear() {
         _state = 0;
         _type = null;
     }

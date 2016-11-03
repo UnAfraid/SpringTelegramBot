@@ -3,6 +3,7 @@ package com.github.unafraid.spring.bot.handlers.impl;
 import com.github.unafraid.spring.bot.util.BotUtil;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.api.objects.Message;
+import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
@@ -31,15 +32,15 @@ public final class ResolveHandler implements ICommandHandler {
     }
 
     @Override
-    public void onMessage(AbsSender bot, Message message, int updateId, List<String> args) throws TelegramApiException {
+    public void onCommandMessage(AbsSender bot, Update update, Message message, List<String> args) throws TelegramApiException {
         if (args.isEmpty()) {
             BotUtil.sendUsage(bot, message, this);
             return;
         }
         final String hostName = args.get(0);
         try {
-            InetAddress addr = InetAddress.getByName(hostName);
-            BotUtil.sendMessage(bot, message, "*" + hostName + "* = " + addr.getHostAddress(), true, true, null);
+            final InetAddress address = InetAddress.getByName(hostName);
+            BotUtil.sendMessage(bot, message, "*" + hostName + "* = " + address.getHostAddress(), true, true, null);
         } catch (Exception e) {
             BotUtil.sendMessage(bot, message, "Failed to resolve: " + hostName + " " + e.getMessage(), true, false, null);
         }

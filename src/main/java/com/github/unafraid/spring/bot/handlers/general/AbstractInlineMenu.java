@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractInlineMenu<T extends AbstractCommandData> implements ICommandHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractInlineMenu.class);
-    private List<ICommandType> _commands = new ArrayList<>();
+    private final List<ICommandType> _commands = new ArrayList<>();
     private final Map<Integer, T> _data = new ConcurrentHashMap<>();
 
     protected void addCommand(ICommandType type) {
@@ -30,14 +30,14 @@ public abstract class AbstractInlineMenu<T extends AbstractCommandData> implemen
     }
 
     @Override
-    public boolean onMessage(AbsSender bot, Message message, List<String> args) throws TelegramApiException {
+    public boolean onMessage(AbsSender bot, Update update, Message message, List<String> args) throws TelegramApiException {
         final T data = _data.computeIfAbsent(message.getFrom().getId(), this::createData);
         return onMessageInput(bot, message, data);
     }
 
 
     @Override
-    public final void onMessage(AbsSender bot, Message message, int updateId, List<String> args) throws TelegramApiException {
+    public final void onCommandMessage(AbsSender bot, Update update, Message message, List<String> args) throws TelegramApiException {
         final T data = _data.computeIfAbsent(message.getFrom().getId(), this::createData);
         if (data.getState() == 0) {
             final InlineKeyboardMarkup markup = generateMenu(_commands);
@@ -48,7 +48,7 @@ public abstract class AbstractInlineMenu<T extends AbstractCommandData> implemen
     }
 
     @Override
-    public boolean onCallback(AbsSender bot, Update update, CallbackQuery query) throws TelegramApiException {
+    public boolean onCallbackQuery(AbsSender bot, Update update, CallbackQuery query) throws TelegramApiException {
         final T data = _data.computeIfAbsent(query.getFrom().getId(), this::createData);
         final ICommandType type = getCommandType(query.getData(), _commands);
         if (type != null) {
@@ -61,6 +61,12 @@ public abstract class AbstractInlineMenu<T extends AbstractCommandData> implemen
             }
         }
         return onMenuSelect(bot, update, query, data);
+    }
+
+
+    @Override
+    public void onCancel(AbsSender bot, Update update, Message message) throws TelegramApiException {
+        _data.clear();
     }
 
     private ICommandType getCommandType(String text, List<ICommandType> commands) {

@@ -47,10 +47,6 @@ def generalManifest = manifest {
             'Main-Class': 'com.github.unafraid.spring.Application')
 }
 
-war {
-
-}
-
 jar {
     manifest {
         from(generalManifest)
