@@ -3,7 +3,7 @@ package com.github.unafraid.spring.bot.handlers.general;
 import com.github.unafraid.spring.services.UsersService;
 
 /**
- * Created by UnAfraid on 3.11.2016 г..
+ * @author UnAfraid
  */
 public interface IAccessLevelHandler {
     /**

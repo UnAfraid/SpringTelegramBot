@@ -37,7 +37,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * Created by UnAfraid on 21.10.2016 г..
+ * @author UnAfraid
  */
 @Service
 public class TelegramBotService extends TelegramWebhookBot {

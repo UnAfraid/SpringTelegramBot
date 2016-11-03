@@ -9,7 +9,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * Created by UnAfraid on 29.10.2016 г..
+ * @author UnAfraid
  */
 @Service
 public class UsersService {

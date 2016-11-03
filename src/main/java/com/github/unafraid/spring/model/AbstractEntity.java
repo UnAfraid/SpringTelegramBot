@@ -9,7 +9,7 @@ import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
 /**
- * Created by UnAfraid on 29.10.2016 г..
+ * @author UnAfraid
  */
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)

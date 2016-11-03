@@ -8,7 +8,7 @@ import org.telegram.telegrambots.api.objects.Update;
 import javax.inject.Inject;
 
 /**
- * Created by UnAfraid on 21.10.2016 г..
+ * @author UnAfraid
  */
 @RestController
 public class MainController {

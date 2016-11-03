@@ -18,7 +18,7 @@ import java.util.Map;
 
 
 /**
- * Created by UnAfraid on 21.10.2016 г..
+ * @author UnAfraid
  */
 @SpringBootApplication
 @EnableConfigurationProperties({TelegramBotConfig.class})

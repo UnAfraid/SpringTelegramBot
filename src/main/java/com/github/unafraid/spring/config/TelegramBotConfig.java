@@ -4,7 +4,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * Created by UnAfraid on 22.10.2016 г..
+ * @author UnAfraid
  */
 @ConfigurationProperties(prefix = "telegram")
 public class TelegramBotConfig {

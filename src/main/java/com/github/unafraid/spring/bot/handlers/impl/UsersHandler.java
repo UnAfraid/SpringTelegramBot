@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by UnAfraid on 30.10.2016 г..
+ * @author UnAfraid
  */
 @Service
 public class UsersHandler extends AbstractInlineMenu<UsersHandler.UserData> {
