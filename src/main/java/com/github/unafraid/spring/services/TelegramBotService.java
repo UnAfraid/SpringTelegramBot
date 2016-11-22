@@ -40,15 +40,16 @@ public class TelegramBotService extends TelegramWebhookBot {
     private UsersService usersService;
 
     @Inject
-    private void setWebHook(TelegramBotConfig config) throws Exception {
+    private void init(TelegramBotConfig config) throws Exception {
         final WebhookInfo info = getWebhookInfo();
         final String url = info.getUrl();
+        final String webHookUrl = config.getPath() + config.getToken();
         LOGGER.info("Verifying web hook..");
-        if (url == null || url.isEmpty() || !url.equals(config.getPath())) {
-            LOGGER.info("Web Hook URL require changes updating..", url);
-            setWebhook(config.getPath(), "");
+        if (url == null || url.isEmpty() || !url.equals(webHookUrl)) {
+            LOGGER.info("Web Hook URL require changes updating to: {} ..", webHookUrl);
+            setWebhook(webHookUrl, "");
         } else {
-            LOGGER.info("Web Hook is okay");
+            LOGGER.info("Web Hook is okay {}", webHookUrl);
         }
     }
 
@@ -187,7 +188,7 @@ public class TelegramBotService extends TelegramWebhookBot {
             setWebhook.setUrl(url);
             setWebhook.setCertificateFile(publicCertificatePath);
 
-            final String responseContent = BotUtil.doPostJSONQuery(this, SetWebhook.PATH, BotUtil.STANDARD_HEADERS, setWebhook);
+            final String responseContent = BotUtil.doPostJSONQuery(this, SetWebhook.PATH, setWebhook);
             final JSONObject jsonObject = new JSONObject(responseContent);
             if (!jsonObject.getBoolean(ApiConstants.RESPONSE_FIELD_OK)) {
                 throw new TelegramApiRequestException("Error setting web hook", jsonObject);

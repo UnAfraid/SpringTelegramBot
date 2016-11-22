@@ -57,7 +57,7 @@ public abstract class TelegramWebhookBot extends AbsSender implements WebhookBot
             try {
                 method.validate();
 
-                final String result = BotUtil.doPostJSONQuery(this, method.getMethod(), BotUtil.STANDARD_HEADERS, method);
+                final String result = BotUtil.doPostJSONQuery(this, method.getMethod(), method);
                 try {
                     callback.onResult(method, method.deserializeResponse(result));
                 } catch (TelegramApiRequestException e) {
@@ -74,7 +74,7 @@ public abstract class TelegramWebhookBot extends AbsSender implements WebhookBot
         method.validate();
 
         try {
-            final String result = BotUtil.doPostJSONQuery(this, method.getMethod(), BotUtil.STANDARD_HEADERS, method);
+            final String result = BotUtil.doPostJSONQuery(this, method.getMethod(), method);
             return method.deserializeResponse(result);
         } catch (Exception e) {
             throw new TelegramApiException("Unable to execute " + method.getMethod() + " method", e);

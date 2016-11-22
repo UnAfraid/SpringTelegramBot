@@ -15,7 +15,7 @@ public class MainController {
     @Inject
     private TelegramBotService telegramBotService;
 
-    @RequestMapping(value = "/bot", method = RequestMethod.POST)
+    @RequestMapping(value = "/${TELEGRAM_TOKEN}", method = RequestMethod.POST)
     @ResponseBody
     public BotApiMethod<?> onUpdateReceived(@RequestBody Update update) {
         return telegramBotService.onWebhookUpdateReceived(update);
