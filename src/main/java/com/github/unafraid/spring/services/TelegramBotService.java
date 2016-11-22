@@ -1,5 +1,6 @@
 package com.github.unafraid.spring.services;
 
+import com.github.unafraid.spring.bot.TelegramWebhookBot;
 import com.github.unafraid.spring.bot.handlers.general.*;
 import com.github.unafraid.spring.bot.util.BotUtil;
 import com.github.unafraid.spring.bot.util.IThrowableFunction;
@@ -9,32 +10,20 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.Constants;
+import org.telegram.telegrambots.ApiConstants;
 import org.telegram.telegrambots.api.methods.BotApiMethod;
 import org.telegram.telegrambots.api.methods.updates.SetWebhook;
-import org.telegram.telegrambots.api.objects.CallbackQuery;
-import org.telegram.telegrambots.api.objects.Message;
-import org.telegram.telegrambots.api.objects.Update;
-import org.telegram.telegrambots.api.objects.User;
+import org.telegram.telegrambots.api.objects.*;
 import org.telegram.telegrambots.api.objects.inlinequery.ChosenInlineQuery;
 import org.telegram.telegrambots.api.objects.inlinequery.InlineQuery;
-import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.exceptions.TelegramApiRequestException;
 
 import javax.inject.Inject;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * @author UnAfraid
@@ -52,51 +41,14 @@ public class TelegramBotService extends TelegramWebhookBot {
 
     @Inject
     private void setWebHook(TelegramBotConfig config) throws Exception {
-        try {
-            final Map<String, String> params = new HashMap<>();
-            params.put(SetWebhook.URL_FIELD, config.getPath());
-            final URL urlAddress = new URL(Constants.BASEURL + getBotToken() + "/" + SetWebhook.PATH);
-            final HttpURLConnection connection = (HttpURLConnection) urlAddress.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setDoOutput(true);
-            connection.setDoInput(true);
-
-            try (final OutputStream os = connection.getOutputStream();
-                 final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8.name()))) {
-
-                final StringBuilder result = new StringBuilder();
-                boolean first = true;
-                for (Map.Entry<String, String> entry : params.entrySet()) {
-                    if (first) {
-                        first = false;
-                    } else {
-                        result.append("&");
-                    }
-
-                    result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
-                    result.append("=");
-                    result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
-                }
-
-                writer.write(result.toString());
-            }
-
-            connection.connect();
-
-            try (final InputStreamReader input = new InputStreamReader(connection.getInputStream());
-                 final BufferedReader reader = new BufferedReader(input)) {
-                final String responseContent = reader.lines().parallel().collect(Collectors.joining(System.lineSeparator()));
-                JSONObject jsonObject = new JSONObject(responseContent);
-                if (!jsonObject.getBoolean(Constants.RESPONSEFIELDOK)) {
-                    throw new TelegramApiRequestException("Error setting webhook", jsonObject);
-                }
-            }
-
-            connection.disconnect();
-        } catch (JSONException e) {
-            throw new TelegramApiRequestException("Error de-serializing setWebhook method response", e);
-        } catch (IOException e) {
-            throw new TelegramApiRequestException("Error executing setWebook method", e);
+        final WebhookInfo info = getWebhookInfo();
+        final String url = info.getUrl();
+        LOGGER.info("Verifying web hook..");
+        if (url == null || url.isEmpty() || !url.equals(config.getPath())) {
+            LOGGER.info("Web Hook URL require changes updating..", url);
+            setWebhook(config.getPath(), "");
+        } else {
+            LOGGER.info("Web Hook is okay");
         }
     }
 
@@ -226,6 +178,26 @@ public class TelegramBotService extends TelegramWebhookBot {
     @Override
     public String getBotToken() {
         return config.getToken();
+    }
+
+    @Override
+    public void setWebhook(String url, String publicCertificatePath) throws TelegramApiRequestException {
+        try {
+            final SetWebhook setWebhook = new SetWebhook();
+            setWebhook.setUrl(url);
+            setWebhook.setCertificateFile(publicCertificatePath);
+
+            final String responseContent = BotUtil.doPostJSONQuery(this, SetWebhook.PATH, BotUtil.STANDARD_HEADERS, setWebhook);
+            final JSONObject jsonObject = new JSONObject(responseContent);
+            if (!jsonObject.getBoolean(ApiConstants.RESPONSE_FIELD_OK)) {
+                throw new TelegramApiRequestException("Error setting web hook", jsonObject);
+            }
+            LOGGER.info("Web hook set: {}", jsonObject);
+        } catch (JSONException e) {
+            throw new TelegramApiRequestException("Error de-serializing setWebHook method response", e);
+        } catch (Exception e) {
+            throw new TelegramApiRequestException("Error executing setWebHook method", e);
+        }
     }
 
     @Override

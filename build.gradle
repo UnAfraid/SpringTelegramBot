@@ -21,7 +21,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-    compile("org.telegram:telegrambots:2.4.0")
+    compile("org.telegram:telegrambots-meta:2.4.4")
     compile("org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Draft-16")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.hibernate:hibernate-core:5.2.4.Final")
