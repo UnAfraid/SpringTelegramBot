@@ -15,7 +15,7 @@ spring:
         hibernate.cache.use_query_cache: false
         hibernate.generate_statistics: false
         hibernate.hbm2ddl.auto: update
-        hibernate.dialect: org.hibernate.dialect.MySQLDialect
+        hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
         hibernate.connection.pool_size: 5
 
 server:

@@ -9,13 +9,13 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
  * @author UnAfraid
  */
 public interface IMessageHandler {
-    /**
-     * Fired whenever user types anything but a command
-     *
-     * @param bot     the bot
-     * @param update  the update
-     * @param message the message
-     * @throws TelegramApiException the exception
-     */
-    boolean onMessage(AbsSender bot, Update update, Message message) throws TelegramApiException;
+	/**
+	 * Fired whenever user types anything but a command
+	 *
+	 * @param bot     the bot
+	 * @param update  the update
+	 * @param message the message
+	 * @throws TelegramApiException the exception
+	 */
+	boolean onMessage(AbsSender bot, Update update, Message message) throws TelegramApiException;
 }

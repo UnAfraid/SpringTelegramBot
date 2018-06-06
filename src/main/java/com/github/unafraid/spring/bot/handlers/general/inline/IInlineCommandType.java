@@ -6,9 +6,9 @@ import java.util.List;
  * Created by UnAfraid on 30.10.2016 г..
  */
 public interface IInlineCommandType {
-    String getName();
+	String getName();
 
-    int getRow();
+	int getRow();
 
-    List<IInlineCommandType> getSubCommands();
+	List<IInlineCommandType> getSubCommands();
 }
