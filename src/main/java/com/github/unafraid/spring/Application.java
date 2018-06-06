@@ -12,9 +12,9 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import com.github.unafraid.spring.bot.handlers.general.CommandHandler;
-import com.github.unafraid.spring.bot.handlers.general.ICommandHandler;
 import com.github.unafraid.spring.config.TelegramBotConfig;
+import com.github.unafraid.telegrambot.handlers.CommandHandlers;
+import com.github.unafraid.telegrambot.handlers.ICommandHandler;
 
 
 /**
@@ -38,7 +38,7 @@ public class Application extends SpringBootServletInitializer {
 		// Handlers setup
 		final Map<String, ICommandHandler> handlers = context.getBeansOfType(ICommandHandler.class);
 		handlers.values().forEach(handler -> {
-			CommandHandler.getInstance().addHandler(handler);
+			CommandHandlers.getInstance().addHandler(handler);
 			LOGGER.info("Loaded handler: {}", handler.getClass().getSimpleName());
 		});
 		LOGGER.info("Loaded {} handlers", handlers.size());

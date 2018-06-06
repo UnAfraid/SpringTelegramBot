@@ -1,6 +1,31 @@
+management:
+    context-path: /management
+    health:
+        mail:
+            enabled: false
 spring:
     application:
         name: telegram-bot
+
+    endpoints:
+        actuator.enabled: false
+        auditevents.enabled: false
+        autoconfig.enabled: false
+        beans.enabled: false
+        configprops.enabled: false
+        dump.enabled: false
+        env.enabled: false
+        flyway.enabled: false
+        loggers.enabled: false
+        liquibase.enabled: false
+        metrics.enabled: false
+        mappings.enabled: false
+        shutdown.enabled: false
+        trace.enabled: false
+        docs.enabled: false
+        heapdump.enabled: false
+        jolokia.enabled: false
+        logfile.enabled: false
 
     datasource:
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -9,17 +34,24 @@ spring:
       password: ${JDBC_PASSWORD}
 
     jpa:
-      show-sql: false
-      properties:
-        hibernate.cache.use_second_level_cache: false
-        hibernate.cache.use_query_cache: false
-        hibernate.generate_statistics: false
-        hibernate.hbm2ddl.auto: update
-        hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-        hibernate.connection.pool_size: 5
+        show-sql: false
+        hibernate:
+            ddl-auto: update
+            naming_strategy: org.hibernate.cfg.DefaultNamingStrategy
+        properties:
+            hibernate.cache.use_second_level_cache: false
+            hibernate.cache.use_query_cache: false
+            hibernate.generate_statistics: false
+            hibernate.hbm2ddl.auto: update
+            hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
 
 server:
   port: ${PORT}
+  compression:
+    enabled: true
+    mime-types: text/html,text/css,application/javascript,application/json
+    min-response-size: 1024
+
 
 telegram:
   token: ${TELEGRAM_TOKEN}

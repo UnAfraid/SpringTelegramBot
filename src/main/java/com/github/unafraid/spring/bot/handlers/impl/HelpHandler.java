@@ -11,11 +11,10 @@ import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
-import com.github.unafraid.spring.bot.handlers.general.CommandHandler;
-import com.github.unafraid.spring.bot.handlers.general.IAccessLevelHandler;
-import com.github.unafraid.spring.bot.handlers.general.ICommandHandler;
-import com.github.unafraid.spring.bot.util.BotUtil;
 import com.github.unafraid.spring.services.UsersService;
+import com.github.unafraid.telegrambot.handlers.CommandHandlers;
+import com.github.unafraid.telegrambot.handlers.IAccessLevelHandler;
+import com.github.unafraid.telegrambot.handlers.ICommandHandler;
 
 /**
  * @author UnAfraid
@@ -45,9 +44,9 @@ public final class HelpHandler implements ICommandHandler {
 		if (args.isEmpty()) {
 			final StringBuilder sb = new StringBuilder();
 			final Map<String, List<String>> help = new LinkedHashMap<>();
-			CommandHandler.getInstance().getHandlers()
+			CommandHandlers.getInstance().getHandlers()
 					.stream()
-					.filter(handler -> IAccessLevelHandler.validate(handler, message.getFrom().getId(), usersService))
+					.filter(handler -> !(handler instanceof IAccessLevelHandler) || ((IAccessLevelHandler) handler).validate(message.getFrom()))
 					.forEach(handler -> help.computeIfAbsent(handler.getCategory(), key -> new ArrayList<>()).add(handler.getCommand() + " - " + handler.getDescription()));
 
 			help.entrySet().forEach(entry ->
@@ -59,7 +58,7 @@ public final class HelpHandler implements ICommandHandler {
 				sb.append(System.lineSeparator());
 			});
 
-			BotUtil.sendMessage(bot, message, sb.toString(), true, false, null);
+			com.github.unafraid.telegrambot.util.BotUtil.sendMessage(bot, message, sb.toString(), true, false, null);
 			return;
 		}
 
@@ -67,14 +66,12 @@ public final class HelpHandler implements ICommandHandler {
 		if (command.charAt(0) != '/') {
 			command = '/' + command;
 		}
-		final ICommandHandler handler = CommandHandler.getInstance().getHandler(command);
+		final ICommandHandler handler = CommandHandlers.getInstance().getHandler(command);
 		if (handler == null) {
-			BotUtil.sendMessage(bot, message, "Unknown command.", false, false, null);
+			com.github.unafraid.telegrambot.util.BotUtil.sendMessage(bot, message, "Unknown command.", false, false, null);
 			return;
 		}
 
-		//if (UsersHandler.validate(id, handler.getRequiredAccessLevel())) {
-		BotUtil.sendMessage(bot, message, "Usage:" + System.lineSeparator() + handler.getUsage(), true, false, null);
-		//}
+		com.github.unafraid.telegrambot.util.BotUtil.sendMessage(bot, message, "Usage:" + System.lineSeparator() + handler.getUsage(), true, false, null);
 	}
 }

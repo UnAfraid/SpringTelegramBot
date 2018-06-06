@@ -15,6 +15,7 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 dependencies {
 	compile("org.telegram:telegrambots-meta:3.6.1")
+	compile("com.github.unafraid.telegram-apis:InlineMenuAPI:1.0.0")
 	compile("mysql:mysql-connector-java:6.0.5")
 	compile("org.hibernate:hibernate-core:5.2.17.Final")
 	compile("org.hibernate:hibernate-envers:5.2.17.Final")

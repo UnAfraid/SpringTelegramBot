@@ -32,7 +32,7 @@ import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.generics.WebhookBot;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.unafraid.spring.bot.handlers.general.ICommandHandler;
+import com.github.unafraid.telegrambot.handlers.ICommandHandler;
 
 /**
  * @author UnAfraid

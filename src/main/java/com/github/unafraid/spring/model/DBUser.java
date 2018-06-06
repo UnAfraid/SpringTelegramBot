@@ -11,7 +11,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "users")
-public class User extends AbstractEntity {
+public class DBUser extends AbstractEntity {
 	@Id
 	@Column(unique = true, nullable = false)
 	private Integer id;
@@ -19,12 +19,12 @@ public class User extends AbstractEntity {
 	private String name;
 	private Integer level;
 
-	public User() {
+	public DBUser() {
 		this.createdDate = LocalDateTime.now();
 		this.modifiedDate = LocalDateTime.now();
 	}
 
-	public User(int id, String name, int level) {
+	public DBUser(int id, String name, int level) {
 		this.id = id;
 		this.name = name;
 		this.level = level;

@@ -21,5 +21,3 @@ gradle.properties
 .directory
 *.log
 .env
-
-src/main/resources/config/application.yml

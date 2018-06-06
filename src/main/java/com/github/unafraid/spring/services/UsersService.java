@@ -5,7 +5,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.github.unafraid.spring.model.User;
+import com.github.unafraid.spring.model.DBUser;
 import com.github.unafraid.spring.repositories.UsersRepository;
 
 /**
@@ -18,20 +18,20 @@ public class UsersService {
 	private UsersRepository usersRepository;
 
 	@Transactional
-	public User create(int id, String name, int level) {
-		final User user = new User(id, name, level);
+	public DBUser create(int id, String name, int level) {
+		final DBUser user = new DBUser(id, name, level);
 		return usersRepository.save(user);
 	}
 
 	@Transactional
-	public void update(User user) {
+	public void update(DBUser user) {
 		usersRepository.save(user);
 	}
 
 
 	@Transactional
-	public User delete(int id) {
-		final User user = usersRepository.findOne(id);
+	public DBUser delete(int id) {
+		final DBUser user = usersRepository.findOne(id);
 		if (user == null) {
 			return null;
 		}
@@ -40,16 +40,16 @@ public class UsersService {
 	}
 
 	@Transactional
-	public User findById(int id) {
+	public DBUser findById(int id) {
 		return usersRepository.findOne(id);
 	}
 
 	@Transactional
-	public User findByName(String name) {
+	public DBUser findByName(String name) {
 		return usersRepository.findByName(name);
 	}
 
-	public List<User> findAll() {
+	public List<DBUser> findAll() {
 		return usersRepository.findAll();
 	}
 
@@ -58,7 +58,7 @@ public class UsersService {
 			return true;
 		}
 
-		final User user = findById(id);
+		final DBUser user = findById(id);
 		return (user != null) && (user.getLevel() >= level);
 	}
 }

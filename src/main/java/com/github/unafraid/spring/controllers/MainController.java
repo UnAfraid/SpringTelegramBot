@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.telegram.telegrambots.api.methods.BotApiMethod;
 import org.telegram.telegrambots.api.objects.Update;
-import com.github.unafraid.spring.services.TelegramBotService;
+import com.github.unafraid.spring.services.TelegramWebHookBotService;
 
 /**
  * @author UnAfraid
@@ -17,9 +17,9 @@ import com.github.unafraid.spring.services.TelegramBotService;
 @RestController
 public class MainController {
 	@Inject
-	private TelegramBotService telegramBotService;
+	private TelegramWebHookBotService telegramBotService;
 
-	@RequestMapping(value = "/${TELEGRAM_TOKEN}", method = RequestMethod.POST)
+	@RequestMapping(value = "/callback/${TELEGRAM_TOKEN}", method = RequestMethod.POST)
 	@ResponseBody
 	public BotApiMethod<?> onUpdateReceived(@RequestBody Update update) {
 		return telegramBotService.onWebhookUpdateReceived(update);

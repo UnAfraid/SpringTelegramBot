@@ -7,8 +7,8 @@ import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
-import com.github.unafraid.spring.bot.handlers.general.ICommandHandler;
 import com.github.unafraid.spring.bot.util.BotUtil;
+import com.github.unafraid.telegrambot.handlers.ICommandHandler;
 
 /**
  * @author UnAfraid
@@ -38,7 +38,7 @@ public final class WhoAmI implements ICommandHandler {
 		if (message.getFrom().getUserName() != null) {
 			sb.append("Username: @").append(message.getFrom().getUserName()).append(System.lineSeparator());
 		}
-		sb.append("Chat Type: ").append(message.getChat().isGroupChat() ? "Group Chat" : message.getChat().isSuperGroupChat() ? "Super Group Chat" : message.getChat().isChannelChat() ? "Channel Chat" : message.getChat().isUserChat() ? "User Chat" : "No way!?").append(System.lineSeparator());
+		sb.append("Chat Type: ").append(message.getChat().isGroupChat() ? "Group Chat" : message.getChat().isSuperGroupChat() ? "Super Group Chat" : message.getChat().isChannelChat() ? "Channel Chat" : message.getChat().isUserChat() ? "DBUser Chat" : "No way!?").append(System.lineSeparator());
 		if (message.getChat().getId() < 0) {
 			sb.append("Group Id: ").append(message.getChat().getId()).append(System.lineSeparator());
 			sb.append("Group Name: ").append(message.getChat().getTitle()).append(System.lineSeparator());
