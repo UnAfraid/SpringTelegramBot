@@ -42,14 +42,4 @@ public class TelegramBotConfig {
 	public void setPath(String path) {
 		this.path = path;
 	}
-
-	@Override
-	public String toString() {
-		final StringBuilder sb = new StringBuilder("AnnotationConfiguration{");
-		sb.append("token='").append(token).append('\'');
-		sb.append(", username='").append(username).append('\'');
-		sb.append(", path='").append(path).append('\'');
-		sb.append('}');
-		return sb.toString();
-	}
 }

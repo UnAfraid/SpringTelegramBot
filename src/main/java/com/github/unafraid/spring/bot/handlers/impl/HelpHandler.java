@@ -4,26 +4,22 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
-import com.github.unafraid.spring.services.UsersService;
 import com.github.unafraid.telegrambot.handlers.CommandHandlers;
 import com.github.unafraid.telegrambot.handlers.IAccessLevelHandler;
 import com.github.unafraid.telegrambot.handlers.ICommandHandler;
+import com.github.unafraid.telegrambot.util.BotUtil;
 
 /**
  * @author UnAfraid
  */
 @Service
 public final class HelpHandler implements ICommandHandler {
-	@Inject
-	private UsersService usersService;
-
 	@Override
 	public String getCommand() {
 		return "/help";
@@ -49,16 +45,15 @@ public final class HelpHandler implements ICommandHandler {
 					.filter(handler -> !(handler instanceof IAccessLevelHandler) || ((IAccessLevelHandler) handler).validate(message.getFrom()))
 					.forEach(handler -> help.computeIfAbsent(handler.getCategory(), key -> new ArrayList<>()).add(handler.getCommand() + " - " + handler.getDescription()));
 
-			help.entrySet().forEach(entry ->
-			{
-				sb.append(entry.getKey()).append(":").append(System.lineSeparator());
-				for (String line : entry.getValue()) {
+			help.forEach((key, value) -> {
+				sb.append(key).append(":").append(System.lineSeparator());
+				for (String line : value) {
 					sb.append(line).append(System.lineSeparator());
 				}
 				sb.append(System.lineSeparator());
 			});
 
-			com.github.unafraid.telegrambot.util.BotUtil.sendMessage(bot, message, sb.toString(), true, false, null);
+			BotUtil.sendMessage(bot, message, sb.toString(), true, false, null);
 			return;
 		}
 
@@ -68,10 +63,10 @@ public final class HelpHandler implements ICommandHandler {
 		}
 		final ICommandHandler handler = CommandHandlers.getInstance().getHandler(command);
 		if (handler == null) {
-			com.github.unafraid.telegrambot.util.BotUtil.sendMessage(bot, message, "Unknown command.", false, false, null);
+			BotUtil.sendMessage(bot, message, "Unknown command.", false, false, null);
 			return;
 		}
 
-		com.github.unafraid.telegrambot.util.BotUtil.sendMessage(bot, message, "Usage:" + System.lineSeparator() + handler.getUsage(), true, false, null);
+		BotUtil.sendMessage(bot, message, "Usage:" + System.lineSeparator() + handler.getUsage(), true, false, null);
 	}
 }

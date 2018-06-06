@@ -33,8 +33,12 @@ public class UsersMenu extends AbstractInlineHandler {
 	private static final String USER_ID_FIELD = "user_id";
 	private static final String USER_NAME_FIELD = "user_name";
 
-	@Inject
 	private UsersService usersService;
+
+	@Inject
+	public UsersMenu(UsersService usersService) {
+		this.usersService = usersService;
+	}
 
 	@Override
 	public String getCommand() {

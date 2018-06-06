@@ -13,6 +13,7 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 import com.github.unafraid.spring.services.UsersService;
 import com.github.unafraid.telegrambot.handlers.IAccessLevelHandler;
 import com.github.unafraid.telegrambot.handlers.ICommandHandler;
+import com.github.unafraid.telegrambot.util.BotUtil;
 
 
 /**
@@ -20,8 +21,12 @@ import com.github.unafraid.telegrambot.handlers.ICommandHandler;
  */
 @Service
 public final class ResolveHandler implements ICommandHandler, IAccessLevelHandler {
-	@Inject
 	private UsersService usersService;
+
+	@Inject
+	public ResolveHandler(UsersService usersService) {
+		this.usersService = usersService;
+	}
 
 	@Override
 	public String getCommand() {
@@ -56,15 +61,15 @@ public final class ResolveHandler implements ICommandHandler, IAccessLevelHandle
 	@Override
 	public void onCommandMessage(AbsSender bot, Update update, Message message, List<String> args) throws TelegramApiException {
 		if (args.isEmpty()) {
-			com.github.unafraid.telegrambot.util.BotUtil.sendUsage(bot, message, this);
+			BotUtil.sendUsage(bot, message, this);
 			return;
 		}
 		final String hostName = args.get(0);
 		try {
 			final InetAddress address = InetAddress.getByName(hostName);
-			com.github.unafraid.telegrambot.util.BotUtil.sendMessage(bot, message, "*" + hostName + "* = " + address.getHostAddress(), true, true, null);
+			BotUtil.sendMessage(bot, message, "*" + hostName + "* = " + address.getHostAddress(), true, true, null);
 		} catch (Exception e) {
-			com.github.unafraid.telegrambot.util.BotUtil.sendMessage(bot, message, "Failed to resolve: " + hostName + " " + e.getMessage(), true, false, null);
+			BotUtil.sendMessage(bot, message, "Failed to resolve: " + hostName + " " + e.getMessage(), true, false, null);
 		}
 	}
 }

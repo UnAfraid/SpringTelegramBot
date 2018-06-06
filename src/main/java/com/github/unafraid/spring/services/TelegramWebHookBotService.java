@@ -12,7 +12,7 @@ import org.telegram.telegrambots.api.methods.updates.SetWebhook;
 import org.telegram.telegrambots.api.objects.WebhookInfo;
 import org.telegram.telegrambots.exceptions.TelegramApiRequestException;
 import com.github.unafraid.spring.bot.TelegramWebHookBot;
-import com.github.unafraid.spring.bot.util.BotUtil;
+import com.github.unafraid.spring.bot.util.HttpUtil;
 import com.github.unafraid.spring.config.TelegramBotConfig;
 
 /**
@@ -22,12 +22,12 @@ import com.github.unafraid.spring.config.TelegramBotConfig;
 public class TelegramWebHookBotService extends TelegramWebHookBot {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TelegramWebHookBotService.class);
 
-	@Inject
-	private TelegramBotConfig config;
+	private String webPath;
 
 	@Inject
 	public TelegramWebHookBotService(TelegramBotConfig config) throws Exception {
 		super(config.getToken(), config.getUsername());
+		this.webPath = config.getPath();
 		final WebhookInfo info = getWebhookInfo();
 		final String url = info.getUrl();
 		final StringBuilder sb = new StringBuilder(config.getPath());
@@ -55,7 +55,7 @@ public class TelegramWebHookBotService extends TelegramWebHookBot {
 				setWebhook.setCertificateFile(publicCertificatePath);
 			}
 			setWebhook.setMaxConnections(40);
-			final String responseContent = BotUtil.doPostJSONQuery(this, SetWebhook.PATH, setWebhook);
+			final String responseContent = HttpUtil.doPostJSONQuery(this, SetWebhook.PATH, setWebhook);
 			final JSONObject jsonObject = new JSONObject(responseContent);
 			if (!jsonObject.getBoolean(ApiConstants.RESPONSE_FIELD_OK)) {
 				throw new TelegramApiRequestException("Error setting web hook", jsonObject);
@@ -70,6 +70,6 @@ public class TelegramWebHookBotService extends TelegramWebHookBot {
 
 	@Override
 	public String getBotPath() {
-		return config.getPath();
+		return webPath;
 	}
 }

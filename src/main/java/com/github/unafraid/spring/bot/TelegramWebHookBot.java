@@ -15,7 +15,6 @@ public abstract class TelegramWebHookBot extends DefaultTelegramBot implements W
 
 	@Override
 	public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
-		System.out.println("Update arrived: " + update);
 		if (update != null) {
 			onUpdateReceived(update);
 		}

@@ -13,7 +13,6 @@ import com.github.unafraid.spring.repositories.UsersRepository;
  */
 @Service
 public class UsersService {
-
 	@Resource
 	private UsersRepository usersRepository;
 
@@ -28,15 +27,13 @@ public class UsersService {
 		usersRepository.save(user);
 	}
 
-
 	@Transactional
-	public DBUser delete(int id) {
+	public void delete(int id) {
 		final DBUser user = usersRepository.findOne(id);
 		if (user == null) {
-			return null;
+			return;
 		}
 		usersRepository.delete(user);
-		return user;
 	}
 
 	@Transactional

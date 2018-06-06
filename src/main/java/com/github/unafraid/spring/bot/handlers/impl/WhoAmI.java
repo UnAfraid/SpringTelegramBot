@@ -7,8 +7,8 @@ import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
-import com.github.unafraid.spring.bot.util.BotUtil;
 import com.github.unafraid.telegrambot.handlers.ICommandHandler;
+import com.github.unafraid.telegrambot.util.BotUtil;
 
 /**
  * @author UnAfraid
