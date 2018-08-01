@@ -18,12 +18,12 @@ public class DBUser extends AbstractEntity {
 	@Column(unique = true, nullable = false)
 	private String name;
 	private Integer level;
-
+	
 	public DBUser() {
 		this.createdDate = LocalDateTime.now();
 		this.modifiedDate = LocalDateTime.now();
 	}
-
+	
 	public DBUser(int id, String name, int level) {
 		this.id = id;
 		this.name = name;
@@ -31,23 +31,23 @@ public class DBUser extends AbstractEntity {
 		this.createdDate = LocalDateTime.now();
 		this.modifiedDate = LocalDateTime.now();
 	}
-
+	
 	public int getId() {
 		return id;
 	}
-
+	
 	public String getName() {
 		return this.name;
 	}
-
+	
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
 	public int getLevel() {
 		return this.level;
 	}
-
+	
 	public void setLevel(int level) {
 		this.level = level;
 	}

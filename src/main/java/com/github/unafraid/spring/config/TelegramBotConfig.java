@@ -12,33 +12,33 @@ import org.springframework.validation.annotation.Validated;
 public class TelegramBotConfig {
 	@NotBlank
 	private String token;
-
+	
 	@NotBlank
 	private String username;
-
+	
 	@NotBlank
 	private String path;
-
+	
 	public String getToken() {
 		return token;
 	}
-
+	
 	public String getUsername() {
 		return username;
 	}
-
+	
 	public String getPath() {
 		return path;
 	}
-
+	
 	public void setToken(String token) {
 		this.token = token;
 	}
-
+	
 	public void setUsername(String username) {
 		this.username = username;
 	}
-
+	
 	public void setPath(String path) {
 		this.path = path;
 	}

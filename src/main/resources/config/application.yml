@@ -1,49 +1,50 @@
 management:
-    context-path: /management
-    health:
-        mail:
-            enabled: false
+  context-path: /management
+  health:
+    mail:
+      enabled: false
 spring:
-    application:
-        name: telegram-bot
+  application:
+    name: telegram-bot
 
-    endpoints:
-        actuator.enabled: false
-        auditevents.enabled: false
-        autoconfig.enabled: false
-        beans.enabled: false
-        configprops.enabled: false
-        dump.enabled: false
-        env.enabled: false
-        flyway.enabled: false
-        loggers.enabled: false
-        liquibase.enabled: false
-        metrics.enabled: false
-        mappings.enabled: false
-        shutdown.enabled: false
-        trace.enabled: false
-        docs.enabled: false
-        heapdump.enabled: false
-        jolokia.enabled: false
-        logfile.enabled: false
+  endpoints:
+    actuator.enabled: false
+    auditevents.enabled: false
+    autoconfig.enabled: false
+    beans.enabled: false
+    configprops.enabled: false
+    dump.enabled: false
+    env.enabled: false
+    flyway.enabled: false
+    loggers.enabled: false
+    liquibase.enabled: false
+    metrics.enabled: false
+    mappings.enabled: false
+    shutdown.enabled: false
+    trace.enabled: false
+    docs.enabled: false
+    heapdump.enabled: false
+    jolokia.enabled: false
+    logfile.enabled: false
 
-    datasource:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      url: ${JDBC_URL}
-      username: ${JDBC_USERNAME}
-      password: ${JDBC_PASSWORD}
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${JDBC_URL}
+    username: ${JDBC_USERNAME}
+    password: ${JDBC_PASSWORD}
 
-    jpa:
-        show-sql: false
-        hibernate:
-            ddl-auto: update
-            naming_strategy: org.hibernate.cfg.DefaultNamingStrategy
-        properties:
-            hibernate.cache.use_second_level_cache: false
-            hibernate.cache.use_query_cache: false
-            hibernate.generate_statistics: false
-            hibernate.hbm2ddl.auto: update
-            hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  jpa:
+    show-sql: false
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+      naming_strategy: org.hibernate.cfg.DefaultNamingStrategy
+    properties:
+      hibernate.cache.use_second_level_cache: false
+      hibernate.cache.use_query_cache: false
+      hibernate.generate_statistics: false
+      hibernate.hbm2ddl.auto: update
+      hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
 
 server:
   port: ${PORT}

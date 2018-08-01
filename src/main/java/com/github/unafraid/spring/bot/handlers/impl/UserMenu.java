@@ -2,15 +2,15 @@ package com.github.unafraid.spring.bot.handlers.impl;
 
 import java.util.List;
 import javax.inject.Inject;
-
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.bots.AbsSender;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
+
 import com.github.unafraid.spring.model.DBUser;
-import com.github.unafraid.spring.services.UsersService;
+import com.github.unafraid.spring.services.UserService;
 import com.github.unafraid.telegrambot.handlers.inline.AbstractInlineHandler;
 import com.github.unafraid.telegrambot.handlers.inline.InlineButtonBuilder;
 import com.github.unafraid.telegrambot.handlers.inline.InlineContext;
@@ -29,48 +29,48 @@ import com.github.unafraid.telegrambot.util.CommonUtil;
  * @author UnAfraid
  */
 @Service
-public class UsersMenu extends AbstractInlineHandler {
+public class UserMenu extends AbstractInlineHandler {
 	private static final String USER_ID_FIELD = "user_id";
 	private static final String USER_NAME_FIELD = "user_name";
-
-	private UsersService usersService;
-
+	
+	private UserService userService;
+	
 	@Inject
-	public UsersMenu(UsersService usersService) {
-		this.usersService = usersService;
+	public UserMenu(UserService userService) {
+		this.userService = userService;
 	}
-
+	
 	@Override
 	public String getCommand() {
 		return "/users";
 	}
-
+	
 	@Override
 	public String getUsage() {
 		return "/users";
 	}
-
+	
 	@Override
 	public String getDescription() {
 		return "Manages telegram users";
 	}
-
+	
 	@Override
 	public String getCategory() {
 		return "Users management";
 	}
-
+	
 	@Override
 	public int getRequiredAccessLevel() {
 		return 10;
 	}
-
+	
 	@Override
 	public boolean validate(User from) {
-		return usersService.validate(from.getId(), getRequiredAccessLevel());
-
+		return userService.validate(from.getId(), getRequiredAccessLevel());
+		
 	}
-
+	
 	@Override
 	public void registerMenu(InlineContext ctx, InlineMenuBuilder builder) {
 		builder
@@ -112,7 +112,7 @@ public class UsersMenu extends AbstractInlineHandler {
 				.button(defaultClose(ctx))
 				.build();
 	}
-
+	
 	private boolean handleAddUser(InlineCallbackEvent event) throws TelegramApiException {
 		final InlineUserData userData = event.getContext().getUserData(event.getQuery().getFrom().getId());
 		if (userData.getState() == 0) {
@@ -122,7 +122,7 @@ public class UsersMenu extends AbstractInlineHandler {
 		}
 		return false;
 	}
-
+	
 	private boolean handleAddUser(InlineMessageEvent event) throws TelegramApiException {
 		final InlineUserData userData = event.getContext().getUserData(event.getMessage().getFrom().getId());
 		final AbsSender bot = event.getBot();
@@ -159,14 +159,14 @@ public class UsersMenu extends AbstractInlineHandler {
 					BotUtil.sendMessage(bot, message, "Access level must be positive number!", false, false, null);
 					return true;
 				}
-
-				final DBUser creator = usersService.findById(message.getFrom().getId());
+				
+				final DBUser creator = userService.findById(message.getFrom().getId());
 				if (creator.getLevel() <= level) {
 					BotUtil.sendMessage(bot, message, "You cannot create user with higher access then yours, try again!", false, false, null);
 					return true;
 				}
-
-				final DBUser createdUser = usersService.create(userData.getParams().getInt(USER_ID_FIELD), userData.getParams().getString(USER_NAME_FIELD), level);
+				
+				final DBUser createdUser = userService.create(userData.getParams().getInt(USER_ID_FIELD), userData.getParams().getString(USER_NAME_FIELD), level);
 				if (createdUser != null) {
 					BotUtil.sendMessage(bot, message, "User created", false, false, null);
 				} else {
@@ -178,7 +178,7 @@ public class UsersMenu extends AbstractInlineHandler {
 		}
 		return false;
 	}
-
+	
 	private boolean handleEditUserName(InlineCallbackEvent event) throws TelegramApiException {
 		final IInlineCallbackEvent onQueryCallback = evt ->
 		{
@@ -191,7 +191,7 @@ public class UsersMenu extends AbstractInlineHandler {
 			}
 			return false;
 		};
-
+		
 		final IInlineMessageEvent onInputMessage = evt ->
 		{
 			final InlineUserData userData = evt.getContext().getUserData(evt.getMessage().getFrom().getId());
@@ -201,24 +201,24 @@ public class UsersMenu extends AbstractInlineHandler {
 					BotUtil.sendMessage(evt.getBot(), evt.getMessage(), "You need to provide non empty string for username!", false, false, null);
 					return true;
 				}
-
+				
 				final String userName = userData.getParams().getString(USER_NAME_FIELD);
-				final DBUser userToEdit = usersService.findByName(userName);
-				final DBUser creator = usersService.findById(evt.getMessage().getFrom().getId());
+				final DBUser userToEdit = userService.findByName(userName);
+				final DBUser creator = userService.findById(evt.getMessage().getFrom().getId());
 				if (creator.getLevel() <= userToEdit.getLevel()) {
 					BotUtil.sendMessage(evt.getBot(), evt.getMessage(), "You cannot edit user with higher access then yours, try again!", false, false, null);
 					return true;
 				}
 				userToEdit.setName(username);
-				usersService.update(userToEdit);
+				userService.update(userToEdit);
 				BotUtil.sendMessage(evt.getBot(), evt.getMessage(), "Done, user's name has been changed", false, false, null);
 				evt.getContext().clear(evt.getMessage().getFrom().getId());
 				return true;
 			}
 			return false;
 		};
-
-		final List<DBUser> users = usersService.findAll();
+		
+		final List<DBUser> users = userService.findAll();
 		final InlineUserData userData = event.getContext().getUserData(event.getQuery().getFrom().getId());
 		final InlineMenuBuilder usersBuilder = new InlineMenuBuilder(event.getContext(), userData.getActiveMenu());
 		usersBuilder.name("Select user to edit");
@@ -229,15 +229,15 @@ public class UsersMenu extends AbstractInlineHandler {
 					.onInputMessage(onInputMessage)
 					.build());
 		}
-
+		
 		// Back button
 		usersBuilder.button(defaultBack(event.getContext()));
-
+		
 		final InlineMenu usersMenu = usersBuilder.build();
 		userData.editCurrentMenu(event.getBot(), event.getQuery().getMessage(), new InlineFixedButtonsPerRowLayout(3), usersMenu);
 		return true;
 	}
-
+	
 	private boolean handleEditAccessLevel(InlineCallbackEvent event) throws TelegramApiException {
 		final IInlineCallbackEvent onQueryCallback = evt ->
 		{
@@ -250,7 +250,7 @@ public class UsersMenu extends AbstractInlineHandler {
 			}
 			return false;
 		};
-
+		
 		final IInlineMessageEvent onInputMessage = evt ->
 		{
 			final InlineUserData userData = evt.getContext().getUserData(evt.getMessage().getFrom().getId());
@@ -263,25 +263,25 @@ public class UsersMenu extends AbstractInlineHandler {
 					BotUtil.sendMessage(evt.getBot(), evt.getMessage(), "Access level should be positive integer", false, false, null);
 					return true;
 				}
-
+				
 				final int accessLevel = CommonUtil.parseInt(accessLevelString, 0);
 				final String userName = userData.getParams().getString(USER_NAME_FIELD);
-				final DBUser userToEdit = usersService.findByName(userName);
-				final DBUser creator = usersService.findById(evt.getMessage().getFrom().getId());
+				final DBUser userToEdit = userService.findByName(userName);
+				final DBUser creator = userService.findById(evt.getMessage().getFrom().getId());
 				if (creator.getLevel() <= userToEdit.getLevel()) {
 					BotUtil.sendMessage(evt.getBot(), evt.getMessage(), "You cannot edit user with higher access then yours, try again!", false, false, null);
 					return true;
 				}
 				userToEdit.setLevel(accessLevel);
-				usersService.update(userToEdit);
+				userService.update(userToEdit);
 				BotUtil.sendMessage(evt.getBot(), evt.getMessage(), "Done, user's access level has been changed", false, false, null);
 				evt.getContext().clear(evt.getMessage().getFrom().getId());
 				return true;
 			}
 			return false;
 		};
-
-		final List<DBUser> users = usersService.findAll();
+		
+		final List<DBUser> users = userService.findAll();
 		final InlineUserData userData = event.getContext().getUserData(event.getQuery().getFrom().getId());
 		final InlineMenuBuilder usersBuilder = new InlineMenuBuilder(event.getContext(), userData.getActiveMenu());
 		usersBuilder.name("Select user:");
@@ -294,21 +294,21 @@ public class UsersMenu extends AbstractInlineHandler {
 					.build());
 			//@formatter:on
 		}
-
+		
 		// Back button
 		usersBuilder.button(defaultBack(event.getContext()));
-
+		
 		final InlineMenu usersMenu = usersBuilder.build();
 		userData.editCurrentMenu(event.getBot(), event.getQuery().getMessage(), new InlineFixedButtonsPerRowLayout(3), usersMenu);
 		return true;
 	}
-
+	
 	private boolean handleListUsers(InlineCallbackEvent event) throws TelegramApiException {
 		final IInlineCallbackEvent onQueryCallback = evt ->
 		{
 			final InlineUserData userData = evt.getContext().getUserData(evt.getQuery().getFrom().getId());
 			final String targetUserName = userData.getActiveButton().getName();
-			final DBUser usr = usersService.findByName(targetUserName);
+			final DBUser usr = userService.findByName(targetUserName);
 			final AnswerCallbackQuery answer = new AnswerCallbackQuery();
 			answer.setText(usr != null ? String.format("User: [%d](%s) Level: %d", usr.getId(), usr.getName(), usr.getLevel()) : String.format("U've clicked at %s", evt.getQuery().getData()));
 			answer.setCallbackQueryId(evt.getQuery().getId());
@@ -316,8 +316,8 @@ public class UsersMenu extends AbstractInlineHandler {
 			evt.getBot().execute(answer);
 			return true;
 		};
-
-		final List<DBUser> users = usersService.findAll();
+		
+		final List<DBUser> users = userService.findAll();
 		final InlineUserData userData = event.getContext().getUserData(event.getQuery().getFrom().getId());
 		final InlineMenuBuilder usersBuilder = new InlineMenuBuilder(event.getContext(), userData.getActiveMenu());
 		usersBuilder.name("Select user");
@@ -327,35 +327,35 @@ public class UsersMenu extends AbstractInlineHandler {
 					.onQueryCallback(onQueryCallback)
 					.build());
 		}
-
+		
 		// Back button
 		usersBuilder.button(defaultBack(event.getContext()));
-
+		
 		final InlineMenu usersMenu = usersBuilder.build();
 		userData.editCurrentMenu(event.getBot(), event.getQuery().getMessage(), new InlineFixedButtonsPerRowLayout(3), usersMenu);
 		return true;
 	}
-
+	
 	private boolean handleDeleteUser(InlineCallbackEvent event) throws TelegramApiException {
 		final IInlineCallbackEvent onQueryCallback = evt ->
 		{
 			final int id = evt.getQuery().getFrom().getId();
 			final InlineUserData userData = evt.getContext().getUserData(id);
 			final String targetUserName = userData.getActiveButton().getName();
-			final DBUser userToDelete = usersService.findByName(targetUserName);
-			final DBUser currentUser = usersService.findById(id);
+			final DBUser userToDelete = userService.findByName(targetUserName);
+			final DBUser currentUser = userService.findById(id);
 			if (currentUser.getLevel() <= userToDelete.getLevel()) {
 				BotUtil.sendMessage(evt.getBot(), evt.getQuery().getMessage(), "You cannot delete user with higher access then yours, try again!", false, false, null);
 				return true;
 			}
-
-			usersService.delete(userToDelete.getId());
+			
+			userService.delete(userToDelete.getId());
 			BotUtil.editMessage(evt.getBot(), evt.getQuery().getMessage(), String.format("User %s deleted", userToDelete.getName()), false, null);
 			evt.getContext().clear(id);
 			return true;
 		};
-
-		final List<DBUser> users = usersService.findAll();
+		
+		final List<DBUser> users = userService.findAll();
 		final InlineUserData userData = event.getContext().getUserData(event.getQuery().getFrom().getId());
 		final InlineMenuBuilder usersBuilder = new InlineMenuBuilder(event.getContext(), userData.getActiveMenu());
 		usersBuilder.name("Select user to delete");
@@ -365,10 +365,10 @@ public class UsersMenu extends AbstractInlineHandler {
 					.onQueryCallback(onQueryCallback)
 					.build());
 		}
-
+		
 		// Back button
 		usersBuilder.button(defaultBack(event.getContext()));
-
+		
 		final InlineMenu usersMenu = usersBuilder.build();
 		userData.editCurrentMenu(event.getBot(), event.getQuery().getMessage(), usersMenu.getName(), new InlineFixedButtonsPerRowLayout(3), usersMenu);
 		return true;

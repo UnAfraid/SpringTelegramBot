@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO" shutdownHook="disable">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="[%date{HH:mm:ss}] [%level] %logger{1}: %message%n" />
+		</Console>
+		<RollingFile name="ConsoleFile" fileName="log/console.log" filePattern="log/$${date:yyyy-MM}/console/console-%date{yyyy-MM-dd}.log">
+			<PatternLayout pattern="[%date] [%thread] [%level] %logger{1.}: %message%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+		<Root level="info">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="ConsoleFile" />
+		</Root>
+	</Loggers>
+</Configuration>
