@@ -1,6 +1,6 @@
 plugins {
-	id "org.springframework.boot" version "1.5.12.RELEASE"
-	id "com.github.johnrengelman.shadow" version "2.0.2"
+    id "org.springframework.boot" version "1.5.12.RELEASE"
+    id "com.github.johnrengelman.shadow" version "2.0.2"
 }
 
 apply plugin: "java"
@@ -9,42 +9,42 @@ apply plugin: "org.springframework.boot"
 apply plugin: "com.github.johnrengelman.shadow"
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 dependencies {
-	compile("org.telegram:telegrambots-meta:3.6.1")
-	compile("com.github.unafraid.telegram-apis:InlineMenuAPI:1.0.0")
-	compile("mysql:mysql-connector-java:6.0.5")
-	compile("org.hibernate:hibernate-core:5.2.17.Final")
-	compile("org.hibernate:hibernate-envers:5.2.17.Final")
-	compile("org.hibernate:hibernate-entitymanager:5.2.17.Final")
-	compile("org.hibernate:hibernate-validator:5.2.5.Final")
-	compile("org.springframework.boot:spring-boot-starter-data-jpa")
-	compile("org.springframework.boot:spring-boot-starter-web-services") {
-		exclude module: "spring-boot-starter-tomcat"
-	}
-	compile("org.springframework.boot:spring-boot-configuration-processor")
-	compile("org.springframework.boot:spring-boot-starter-jetty")
-	compile("org.springframework.boot:spring-boot-starter-actuator")
-	testCompile("junit:junit")
+    compile("org.telegram:telegrambots-meta:3.6.1")
+    compile("com.github.unafraid.telegram-apis:InlineMenuAPI:1.0.0")
+    compile("mysql:mysql-connector-java:6.0.5")
+    compile("org.hibernate:hibernate-core:5.2.17.Final")
+    compile("org.hibernate:hibernate-envers:5.2.17.Final")
+    compile("org.hibernate:hibernate-entitymanager:5.2.17.Final")
+    compile("org.hibernate:hibernate-validator:5.2.5.Final")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("org.springframework.boot:spring-boot-starter-web-services") {
+        exclude module: "spring-boot-starter-tomcat"
+    }
+    compile("org.springframework.boot:spring-boot-configuration-processor")
+    compile("org.springframework.boot:spring-boot-starter-jetty")
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    testCompile("junit:junit")
 }
 
 tasks.withType(JavaCompile) {
-	options.encoding = "UTF-8"
+    options.encoding = "UTF-8"
 }
 
 jar {
-	manifest {
-		attributes("Built-By": System.getProperty("user.name"),
-				"Implementation-URL": "https://github.com/UnAfraid/SpringTelegramBot/",
-				"Main-Class": "com.github.unafraid.spring.Application")
-	}
+    manifest {
+        attributes("Built-By": System.getProperty("user.name"),
+                "Implementation-URL": "https://github.com/UnAfraid/SpringTelegramBot/",
+                "Main-Class": "com.github.unafraid.spring.Application")
+    }
 }
 
 task wrapper(type: Wrapper) {
-	gradleVersion = "4.7"
+    gradleVersion = "4.8"
 }
