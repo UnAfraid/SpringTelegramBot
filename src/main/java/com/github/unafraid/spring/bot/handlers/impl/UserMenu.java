@@ -26,7 +26,7 @@ public class UserMenu extends AbstractInlineHandler {
     private static final String USER_ID_FIELD = "user_id";
     private static final String USER_NAME_FIELD = "user_name";
 
-    private UserService userService;
+    private final UserService userService;
 
     public UserMenu(UserService userService) {
         this.userService = userService;
