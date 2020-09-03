@@ -3,16 +3,23 @@ package com.github.unafraid.spring.services;
 import com.github.unafraid.spring.bot.AccessLevelValidator;
 import com.github.unafraid.spring.bot.TelegramWebHookBot;
 import com.github.unafraid.spring.config.TelegramBotConfig;
+import com.github.unafraid.telegrambot.handlers.ICommandHandler;
+import com.github.unafraid.telegrambot.handlers.ITelegramHandler;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.updates.SetWebhook;
 import org.telegram.telegrambots.meta.api.objects.ApiResponse;
 import org.telegram.telegrambots.meta.api.objects.WebhookInfo;
+import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author UnAfraid
@@ -35,6 +42,18 @@ public class TelegramWebHookBotService extends TelegramWebHookBot {
         final String webHookUrl = sb.toString();
         if (url == null || url.isEmpty() || !url.equals(webHookUrl)) {
             setWebhook(webHookUrl, "");
+        }
+
+        final List<BotCommand> botCommandList = new ArrayList<>();
+        for (ITelegramHandler handler : getHandlers()) {
+            if (handler instanceof ICommandHandler) {
+                final ICommandHandler commandHandler = (ICommandHandler) handler;
+                botCommandList.add(new BotCommand(commandHandler.getCommand(), commandHandler.getDescription()));
+            }
+        }
+
+        if (!botCommandList.isEmpty()) {
+            execute(new SetMyCommands(botCommandList));
         }
     }
 

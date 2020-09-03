@@ -38,7 +38,7 @@ public final class WhoAmI implements ICommandHandler {
         if (message.getFrom().getUserName() != null) {
             sb.append("Username: @").append(message.getFrom().getUserName()).append(System.lineSeparator());
         }
-        sb.append("Chat Type: ").append(message.getChat().isGroupChat() ? "Group Chat" : message.getChat().isSuperGroupChat() ? "Super Group Chat" : message.getChat().isChannelChat() ? "Channel Chat" : message.getChat().isUserChat() ? "DBUser Chat" : "No way!?").append(System.lineSeparator());
+        sb.append("Chat Type: ").append(message.getChat().isGroupChat() ? "Group Chat" : message.getChat().isSuperGroupChat() ? "Super Group Chat" : message.getChat().isChannelChat() ? "Channel Chat" : message.getChat().isUserChat() ? "Private Chat" : "No way!?").append(System.lineSeparator());
         if (message.getChat().getId() < 0) {
             sb.append("Group Id: ").append(message.getChat().getId()).append(System.lineSeparator());
             sb.append("Group Name: ").append(message.getChat().getTitle()).append(System.lineSeparator());
