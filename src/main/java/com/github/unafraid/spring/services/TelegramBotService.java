@@ -16,6 +16,7 @@ import org.telegram.telegrambots.meta.api.methods.updates.SetWebhook;
 import org.telegram.telegrambots.meta.api.objects.ApiResponse;
 import org.telegram.telegrambots.meta.api.objects.WebhookInfo;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
 import java.util.ArrayList;
@@ -25,25 +26,40 @@ import java.util.List;
  * @author UnAfraid
  */
 @Service
-public class TelegramWebHookBotService extends TelegramWebHookBot {
+public class TelegramBotService extends TelegramWebHookBot {
     private final String webPath;
+    private final TelegramBotConfig config;
 
-    public TelegramWebHookBotService(TelegramBotConfig config, ApplicationContext appContext, AccessLevelValidator accessLevelValidator) throws Exception {
+    public TelegramBotService(TelegramBotConfig config, ApplicationContext appContext, AccessLevelValidator accessLevelValidator) throws Exception {
         super(config.getToken(), config.getUsername(), appContext, accessLevelValidator);
+        this.config = config;
         this.webPath = config.getUrl();
+        init();
+    }
+
+    private void init() throws Exception {
         final WebhookInfo info = getWebhookInfo();
         final String url = info.getUrl();
+        final String webHookUrl = computeCallbackEndpoint();
+
+        if (url == null || url.isEmpty() || !url.equals(webHookUrl)) {
+            setWebhook(webHookUrl, "");
+        }
+
+        registerMyCommands();
+    }
+
+    private String computeCallbackEndpoint() {
         final StringBuilder sb = new StringBuilder(config.getUrl());
         if (sb.charAt(sb.length() - 1) != '/') {
             sb.append('/');
         }
         sb.append("callback/");
         sb.append(config.getToken());
-        final String webHookUrl = sb.toString();
-        if (url == null || url.isEmpty() || !url.equals(webHookUrl)) {
-            setWebhook(webHookUrl, "");
-        }
+        return sb.toString();
+    }
 
+    private void registerMyCommands() throws TelegramApiException {
         final List<BotCommand> botCommandList = new ArrayList<>();
         for (ITelegramHandler handler : getHandlers()) {
             if (handler instanceof ICommandHandler) {
@@ -65,12 +81,12 @@ public class TelegramWebHookBotService extends TelegramWebHookBot {
             if (publicCertificatePath != null && !publicCertificatePath.isEmpty()) {
                 setWebhook.setCertificateFile(publicCertificatePath);
             }
-            setWebhook.setMaxConnections(40);
+            setWebhook.setMaxConnections(config.getMaxConnections());
 
             final RestTemplate rest = new RestTemplate();
             final HttpHeaders headers = new HttpHeaders();
             headers.add("Content-Type", "application/json");
-            headers.add("Accept", "*/*");
+            headers.add("Accept", "application/json");
 
             final String setWebhookUrl = String.format("https://api.telegram.org/bot%s/%s", getBotToken(), SetWebhook.PATH);
             rest.exchange(setWebhookUrl, HttpMethod.POST, new HttpEntity<>(setWebhook, headers), ApiResponse.class);

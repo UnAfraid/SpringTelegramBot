@@ -18,7 +18,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Service
 public final class StartHandler implements ICommandHandler {
     private final UserService userService;
-
     private final AtomicBoolean createdAdmin = new AtomicBoolean();
 
     public StartHandler(UserService userService) {
@@ -42,15 +41,12 @@ public final class StartHandler implements ICommandHandler {
 
     @Override
     public void onCommandMessage(AbstractTelegramBot bot, Update update, Message message, List<String> args) throws TelegramApiException {
-        if (!createdAdmin.get() && userService.findAll().isEmpty()) {
-            // In case there aren't any users create the first who wrote to the bot as admin and mark as created
-            if (createdAdmin.compareAndSet(false, true)) {
+        if (createdAdmin.compareAndSet(false, true)) {
+            if (userService.count() == 0) {
                 userService.create(message.getFrom().getId(), message.getFrom().getUserName(), 10);
                 BotUtil.sendMessage(bot, message, "Hello master, i am " + bot.getMe().getUserName() + ", if you want to know what i can do type /start", true, false, null);
             }
         } else {
-            // In case there's already an admin we won't fetch all users
-            createdAdmin.set(true);
             BotUtil.sendMessage(bot, message, "Hello, i am " + bot.getMe().getUserName() + ", if you want to know what i can do type /start", true, false, null);
         }
     }

@@ -28,6 +28,11 @@ public class TelegramBotConfig {
     @NotEmpty
     private String url;
 
+    @Value("${TELEGRAM_MAX_CONNECTIONS:40}")
+    @NotNull
+    @NotEmpty
+    private int maxConnections;
+
     public String getToken() {
         return token;
     }
@@ -38,5 +43,9 @@ public class TelegramBotConfig {
 
     public String getUrl() {
         return url;
+    }
+
+    public int getMaxConnections() {
+        return maxConnections;
     }
 }

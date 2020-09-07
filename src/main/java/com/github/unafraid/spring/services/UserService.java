@@ -33,11 +33,7 @@ public class UserService {
 
     @Transactional
     public void delete(int id) {
-        final Optional<DBUser> user = userRepository.findById(id);
-        if (!user.isPresent()) {
-            return;
-        }
-        userRepository.delete(user.get());
+        userRepository.findById(id).ifPresent(userRepository::delete);
     }
 
     @Transactional
@@ -52,6 +48,10 @@ public class UserService {
 
     public List<DBUser> findAll() {
         return userRepository.findAll();
+    }
+
+    public long count() {
+        return userRepository.count();
     }
 
     public boolean validate(int id, int level) {

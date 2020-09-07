@@ -1,6 +1,6 @@
 package com.github.unafraid.spring.controllers;
 
-import com.github.unafraid.spring.services.TelegramWebHookBotService;
+import com.github.unafraid.spring.services.TelegramBotService;
 import org.springframework.web.bind.annotation.*;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -10,9 +10,9 @@ import org.telegram.telegrambots.meta.api.objects.Update;
  */
 @RestController
 public class MainController {
-    private final TelegramWebHookBotService telegramBotService;
+    private final TelegramBotService telegramBotService;
 
-    public MainController(TelegramWebHookBotService telegramBotService) {
+    public MainController(TelegramBotService telegramBotService) {
         this.telegramBotService = telegramBotService;
     }
 
