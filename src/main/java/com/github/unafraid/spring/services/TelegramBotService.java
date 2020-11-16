@@ -43,7 +43,10 @@ public class TelegramBotService extends TelegramWebHookBot {
         final String webHookUrl = computeCallbackEndpoint();
 
         if (url == null || url.isEmpty() || !url.equals(webHookUrl)) {
-            setWebhook(webHookUrl, "");
+            final SetWebhook setWebhook = new SetWebhook();
+            setWebhook.setUrl(webHookUrl);
+            setWebhook.setMaxConnections(config.getMaxConnections());
+            setWebhook(setWebhook);
         }
 
         registerMyCommands();
@@ -74,15 +77,8 @@ public class TelegramBotService extends TelegramWebHookBot {
     }
 
     @Override
-    public void setWebhook(String url, String publicCertificatePath) throws TelegramApiRequestException {
+    public void setWebhook(SetWebhook setWebhook) throws TelegramApiException {
         try {
-            final SetWebhook setWebhook = new SetWebhook();
-            setWebhook.setUrl(url);
-            if (publicCertificatePath != null && !publicCertificatePath.isEmpty()) {
-                setWebhook.setCertificateFile(publicCertificatePath);
-            }
-            setWebhook.setMaxConnections(config.getMaxConnections());
-
             final RestTemplate rest = new RestTemplate();
             final HttpHeaders headers = new HttpHeaders();
             headers.add("Content-Type", "application/json");
