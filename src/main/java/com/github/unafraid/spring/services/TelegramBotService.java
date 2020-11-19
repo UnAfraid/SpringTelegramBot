@@ -42,7 +42,7 @@ public class TelegramBotService extends TelegramWebHookBot {
         final String url = info.getUrl();
         final String webHookUrl = computeCallbackEndpoint();
 
-        if (url == null || url.isEmpty() || !url.equals(webHookUrl)) {
+        if (url == null || url.isEmpty() || !url.equals(webHookUrl) || info.getMaxConnections() != config.getMaxConnections()) {
             final SetWebhook setWebhook = new SetWebhook();
             setWebhook.setUrl(webHookUrl);
             setWebhook.setMaxConnections(config.getMaxConnections());
