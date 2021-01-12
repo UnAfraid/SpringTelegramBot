@@ -1,0 +1,54 @@
+{
+  "name": "Telegram Bot Spring Example",
+  "description": "A barebones Telegram bot using java and Spring framework",
+  "repository": "https://github.com/UnAfraid/SpringTelegramBot",
+  "logo": "https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg",
+  "keywords": [
+    "java",
+    "telegram-bot",
+    "example",
+    "spring"
+  ],
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "addons": [
+    {
+      "plan": "jawsdb-maria:kitefin",
+      "as": "mariadb"
+    }
+  ],
+  "env": {
+    "JDBC_URL": {
+      "description": "The database url in jdbc format example: jdbc:mariadb://localhost/my_bot",
+      "value": ""
+    },
+    "JDBC_USERNAME": {
+      "description": "The database username example: my_bot",
+      "value": ""
+    },
+    "JDBC_PASSWORD": {
+      "description": "The database password",
+      "value": ""
+    },
+    "TELEGRAM_TOKEN": {
+      "description": "The bot name from BotFather",
+      "value": ""
+    },
+    "TELEGRAM_USERNAME": {
+      "description": "The token from BotFather",
+      "value": ""
+    },
+    "TELEGRAM_URL": {
+      "description": "The base url on which your bot would listen example: https://mybot.example.com",
+      "value": ""
+    },
+    "TELEGRAM_MAX_CONNECTIONS": {
+      "description": "The Maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery, 1-100. Defaults to 40. Use lower values to limit the load on your bot's server, and higher values to increase your bot's throughput",
+      "value": "40"
+    }
+  }
+}

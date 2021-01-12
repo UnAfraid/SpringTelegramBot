@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT $JAVA_OPTS -jar build/libs/SpringTelegramBot-all.jar
+web: java -Xmx256m -Dserver.port=$PORT --add-opens java.base/java.lang=ALL-UNNAMED $JAVA_OPTS -jar build/libs/SpringTelegramBot.jar
