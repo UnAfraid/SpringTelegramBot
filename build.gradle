@@ -1,7 +1,6 @@
 plugins {
     id "org.springframework.boot" version "2.4.0"
-    id "com.github.johnrengelman.shadow" version "6.0.0"
-    id "java"
+    id 'java'
 }
 
 apply plugin: "io.spring.dependency-management"
@@ -18,15 +17,23 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.mariadb.jdbc:mariadb-java-client:2.6.2")
+    implementation("mysql:mysql-connector-java:8.0.22")
     implementation("org.telegram:telegrambots-meta:5.0.1")
-    implementation("com.github.unafraid.telegram-apis:InlineMenuAPI:1.0.9")
+    implementation("com.github.unafraid.telegram-apis:InlineMenuAPI:1.0.10")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 jar {
+    archiveFileName = "${rootProject.name}.jar"
     manifest {
         attributes("Built-By": System.getProperty("user.name"),
+                "Class-Path": configurations.runtimeClasspath.collect({ it.getName() }).join(" "),
                 "Implementation-URL": "https://github.com/UnAfraid/SpringTelegramBot/",
                 "Main-Class": "com.github.unafraid.spring.Application")
     }
 }
+
+task stage() {
+    dependsOn clean, bootJar
+}
+tasks.bootJar.mustRunAfter(clean)
