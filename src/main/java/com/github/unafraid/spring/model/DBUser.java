@@ -15,7 +15,7 @@ public class DBUser extends AbstractEntity {
     @Id
     @Column(unique = true, nullable = false)
     private Integer id;
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String name;
     private Integer level;
 
