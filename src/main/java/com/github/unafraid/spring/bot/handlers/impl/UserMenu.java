@@ -325,7 +325,7 @@ public class UserMenu extends AbstractInlineHandler {
     private boolean handleDeleteUser(InlineCallbackEvent event) throws TelegramApiException {
         final IInlineCallbackEvent onQueryCallback = evt ->
         {
-            final int id = evt.getQuery().getFrom().getId();
+            final long id = evt.getQuery().getFrom().getId();
             final InlineUserData userData = evt.getContext().getUserData(id);
             final String targetUserName = userData.getActiveButton().getName();
             final DBUser userToDelete = userService.findByName(targetUserName);

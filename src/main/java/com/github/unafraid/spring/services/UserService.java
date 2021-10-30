@@ -19,7 +19,7 @@ public class UserService {
     }
 
     @Transactional
-    public DBUser create(int id, String name, int level) {
+    public DBUser create(long id, String name, int level) {
         final DBUser user = new DBUser(id, name, level);
         return userRepository.save(user);
     }
@@ -30,12 +30,12 @@ public class UserService {
     }
 
     @Transactional
-    public void delete(int id) {
+    public void delete(long id) {
         userRepository.findById(id).ifPresent(userRepository::delete);
     }
 
     @Transactional
-    public DBUser findById(int id) {
+    public DBUser findById(long id) {
         return userRepository.findById(id).orElse(null);
     }
 
@@ -52,7 +52,7 @@ public class UserService {
         return userRepository.count();
     }
 
-    public boolean validate(int id, int level) {
+    public boolean validate(long id, int level) {
         if (level == 0) {
             return true;
         }
