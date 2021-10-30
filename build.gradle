@@ -19,6 +19,7 @@ dependencies {
     implementation("mysql:mysql-connector-java:8.0.25")
     implementation("org.telegram:telegrambots-meta:5.3.0")
     implementation("com.github.unafraid.telegram-apis:InlineMenuAPI:1.0.12")
+    implementation 'org.jetbrains:annotations:22.0.0'
     testImplementation('org.springframework.boot:spring-boot-starter-test:2.5.5')
 }
 

@@ -4,13 +4,13 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import com.github.unafraid.spring.bot.AccessLevelValidator;
 import com.github.unafraid.spring.bot.TelegramWebHookBot;
 import com.github.unafraid.spring.config.TelegramBotConfig;
 import com.github.unafraid.telegrambot.handlers.ICommandHandler;
 import com.github.unafraid.telegrambot.handlers.ITelegramHandler;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -36,7 +36,10 @@ public class TelegramBotService extends TelegramWebHookBot {
 	private final String webPath;
 	private final TelegramBotConfig config;
 	
-	public TelegramBotService(TelegramBotConfig config, ApplicationContext appContext, Optional<DefaultBotOptions> defaultBotOptions, AccessLevelValidator accessLevelValidator) throws Exception {
+	public TelegramBotService(TelegramBotConfig config,
+							  ApplicationContext appContext,
+							  ObjectProvider<DefaultBotOptions> defaultBotOptions,
+							  AccessLevelValidator accessLevelValidator) throws Exception {
 		super(config.getToken(), config.getUsername(), appContext, defaultBotOptions, accessLevelValidator);
 		this.config = config;
 		this.webPath = config.getUrl();
