@@ -33,6 +33,11 @@ public class TelegramBotConfig {
     @NotEmpty
     private int maxConnections;
 
+    @Value("${TELEGRAM_LANGUAGE_CODE:en}")
+    @NotNull
+    @NotEmpty
+    private String languageCode;
+
     public String getToken() {
         return token;
     }
@@ -47,5 +52,9 @@ public class TelegramBotConfig {
 
     public int getMaxConnections() {
         return maxConnections;
+    }
+
+    public String getLanguageCode() {
+        return languageCode;
     }
 }
