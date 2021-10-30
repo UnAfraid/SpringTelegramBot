@@ -17,7 +17,7 @@ import org.telegram.telegrambots.meta.generics.WebhookBot;
  */
 public abstract class TelegramWebHookBot extends DefaultTelegramBot implements WebhookBot {
 	public TelegramWebHookBot(@NotNull String token,
-                              @NotNull String username,
+							  @NotNull String username,
 							  @NotNull ApplicationContext appContext,
 							  @NotNull ObjectProvider<DefaultBotOptions> defaultBotOptions,
 							  AccessLevelValidator accessLevelValidator) {
