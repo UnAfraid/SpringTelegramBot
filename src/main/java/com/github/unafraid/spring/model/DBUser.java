@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class DBUser extends AbstractEntity {
     @Id
     @Column(unique = true, nullable = false)
-    private Integer id;
+    private Long id;
     @Column(unique = true)
     private String name;
     private Integer level;
@@ -24,7 +24,7 @@ public class DBUser extends AbstractEntity {
         this.modifiedDate = LocalDateTime.now();
     }
 
-    public DBUser(int id, String name, int level) {
+    public DBUser(long id, String name, int level) {
         this.id = id;
         this.name = name;
         this.level = level;
@@ -32,7 +32,7 @@ public class DBUser extends AbstractEntity {
         this.modifiedDate = LocalDateTime.now();
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

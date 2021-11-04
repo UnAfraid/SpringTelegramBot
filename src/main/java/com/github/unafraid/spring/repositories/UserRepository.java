@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 /**
  * @author UnAfraid
  */
-public interface UserRepository extends JpaRepository<DBUser, Integer> {
+public interface UserRepository extends JpaRepository<DBUser, Long> {
     @Query("SELECT u FROM DBUser u WHERE u.name = ?1")
     DBUser findByName(String name);
 }
