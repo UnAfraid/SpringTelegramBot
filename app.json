@@ -15,25 +15,7 @@
       "size": "free"
     }
   },
-  "addons": [
-    {
-      "plan": "jawsdb-maria:kitefin",
-      "as": "mariadb"
-    }
-  ],
   "env": {
-    "JDBC_URL": {
-      "description": "The database url in jdbc format example: jdbc:mariadb://localhost/my_bot",
-      "value": ""
-    },
-    "JDBC_USERNAME": {
-      "description": "The database username example: my_bot",
-      "value": ""
-    },
-    "JDBC_PASSWORD": {
-      "description": "The database password",
-      "value": ""
-    },
     "TELEGRAM_TOKEN": {
       "description": "The bot name from BotFather",
       "value": ""
