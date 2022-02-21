@@ -2,16 +2,5 @@ spring:
   application:
     name: telegram-bot
 
-  datasource:
-    url: ${JDBC_URL}
-    username: ${JDBC_USERNAME}
-    password: ${JDBC_PASSWORD}
-
-  jpa:
-    show-sql: false
-    open-in-view: false
-    hibernate:
-      ddl-auto: update
-
 server:
   port: ${PORT:9090}

@@ -1,5 +1,5 @@
 plugins {
-    id("org.springframework.boot") version "2.6.1"
+    id("org.springframework.boot") version "2.6.3"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     java
     `java-library`
@@ -24,14 +24,11 @@ repositories {
 }
 
 dependencies {
-    api("org.springframework.boot:spring-boot-starter-validation:2.6.1")
-    api("org.springframework.boot:spring-boot-starter-data-jpa:2.6.1")
-    api("org.springframework.boot:spring-boot-starter-web:2.6.1")
-    runtimeOnly("org.mariadb.jdbc:mariadb-java-client:2.7.3")
-    api("org.telegram:telegrambots-meta:5.4.0.1")
-    api("com.github.unafraid.telegram-apis:InlineMenuAPI:1.0.12")
+    api("org.springframework.boot:spring-boot-starter-web")
+    api("org.telegram:telegrambots-meta:5.7.1")
+    api("com.github.unafraid.telegram-apis:InlineMenuAPI:1.0.13")
     api("org.jetbrains:annotations:22.0.0")
-    testImplementation("org.springframework.boot:spring-boot-starter-test:2.6.1")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 configurations.all {

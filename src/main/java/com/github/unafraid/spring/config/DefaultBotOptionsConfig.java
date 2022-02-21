@@ -12,6 +12,9 @@ public class DefaultBotOptionsConfig {
 	@Bean
 	public DefaultBotOptions newDefaultBotOptions() {
 		final DefaultBotOptions defaultBotOptions = new DefaultBotOptions();
+		
+		// XXX: set additional bot options such as Proxy here
+		
 		return defaultBotOptions;
 	}
 }
