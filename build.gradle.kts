@@ -3,12 +3,13 @@ plugins {
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     java
     `java-library`
+    distribution
 }
 
 group = "com.github.unafraid"
 version = "1.0.0-SNAPSHOT"
 
-configure<JavaPluginConvention> {
+configure<JavaPluginExtension> {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
 }
@@ -54,5 +55,17 @@ tasks.withType<Jar> {
 }
 
 tasks.register("stage") {
-    dependsOn("bootJar")
+    dependsOn("installDist")
+}
+
+distributions {
+    main {
+        contents {
+            into("lib") {
+                from(configurations.runtimeClasspath.get())
+                from(tasks.withType<Jar>())
+            }
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        }
+    }
 }
