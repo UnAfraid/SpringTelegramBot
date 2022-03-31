@@ -1,5 +1,5 @@
 plugins {
-    id("org.springframework.boot") version "2.6.3"
+    id("org.springframework.boot") version "2.6.6"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     java
     `java-library`
@@ -28,7 +28,7 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-web")
     api("org.telegram:telegrambots-meta:5.7.1")
     api("com.github.unafraid.telegram-apis:InlineMenuAPI:1.0.13")
-    api("org.jetbrains:annotations:22.0.0")
+    api("org.jetbrains:annotations:23.0.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
