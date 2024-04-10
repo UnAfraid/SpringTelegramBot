@@ -1,6 +1,6 @@
 # SpringTelegramBot ![Test](https://github.com/UnAfraid/SpringTelegramBot/workflows/Test/badge.svg) [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/UnAfraid/SpringTelegramBot)
 
-This repository contains an example of telegram bot written in Java (11 and above) using Spring Framework.
+This repository contains an example of telegram bot written in Java (17 and above) using Spring Framework.
 
 This project uses https://github.com/rubenlagus/TelegramBots, check it out for more telegram bot implementation details,
 also https://core.telegram.org/bots/api for telegram bots API details
