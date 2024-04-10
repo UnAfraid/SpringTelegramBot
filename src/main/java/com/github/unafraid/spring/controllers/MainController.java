@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 /**
@@ -22,7 +21,7 @@ public class MainController {
 	
 	@RequestMapping(value = "/callback/${TELEGRAM_TOKEN}", method = RequestMethod.POST)
 	@ResponseBody
-	public BotApiMethod<?> onUpdateReceived(@RequestBody Update update) {
-		return telegramBotService.onWebhookUpdateReceived(update);
+	public void onUpdateReceived(@RequestBody Update update) {
+		telegramBotService.onWebhookUpdateReceived(update);
 	}
 }

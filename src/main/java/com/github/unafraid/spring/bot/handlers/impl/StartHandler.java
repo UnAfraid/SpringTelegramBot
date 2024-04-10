@@ -6,8 +6,10 @@ import com.github.unafraid.telegrambot.bots.AbstractTelegramBot;
 import com.github.unafraid.telegrambot.handlers.ICommandHandler;
 import com.github.unafraid.telegrambot.util.BotUtil;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.methods.GetMe;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.message.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 /**
@@ -35,6 +37,7 @@ public final class StartHandler implements ICommandHandler {
 	
 	@Override
 	public void onCommandMessage(AbstractTelegramBot bot, Update update, Message message, List<String> args) throws TelegramApiException {
-		BotUtil.sendMessage(bot, message, "Hello, i am " + bot.getMe().getUserName() + ", if you want to know what i can do type /start", true, false, null);
+		final User me = bot.execute(GetMe.builder().build());
+		BotUtil.sendMessage(bot, message, "Hello, i am " + me.getUserName() + ", if you want to know what i can do type /start", true, false, null);
 	}
 }

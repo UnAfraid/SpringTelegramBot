@@ -1,5 +1,6 @@
 package com.github.unafraid.spring.bot;
 
+import java.util.List;
 import java.util.Map;
 
 import com.github.unafraid.telegrambot.bots.DefaultTelegramBot;
@@ -7,21 +8,19 @@ import com.github.unafraid.telegrambot.handlers.ICommandHandler;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.ApplicationContext;
-import org.telegram.telegrambots.bots.DefaultBotOptions;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.generics.WebhookBot;
+import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 /**
  * @author UnAfraid
  */
-public abstract class TelegramWebHookBot extends DefaultTelegramBot implements WebhookBot {
+public abstract class TelegramWebHookBot extends DefaultTelegramBot  {
 	public TelegramWebHookBot(@NotNull String token,
-							  @NotNull String username,
 							  @NotNull ApplicationContext appContext,
-							  @NotNull ObjectProvider<DefaultBotOptions> defaultBotOptions,
+							  @NotNull ObjectProvider<TelegramClient> telegramClientProvider,
 							  AccessLevelValidator accessLevelValidator) {
-		super(token, username, defaultBotOptions.getIfAvailable(DefaultBotOptions::new));
+		super(telegramClientProvider.getIfAvailable(() -> new OkHttpTelegramClient(token)));
 		
 		setAccessLevelValidator(accessLevelValidator);
 		
@@ -29,11 +28,9 @@ public abstract class TelegramWebHookBot extends DefaultTelegramBot implements W
 		handlers.values().forEach(this::addHandler);
 	}
 	
-	@Override
-	public final BotApiMethod<?> onWebhookUpdateReceived(Update update) {
+	public final void onWebhookUpdateReceived(Update update) {
 		if (update != null) {
-			onUpdateReceived(update);
+			consume(List.of(update));
 		}
-		return null;
 	}
 }

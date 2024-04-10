@@ -20,10 +20,6 @@
       "description": "The bot name from BotFather",
       "value": ""
     },
-    "TELEGRAM_USERNAME": {
-      "description": "The token from BotFather",
-      "value": ""
-    },
     "TELEGRAM_URL": {
       "description": "The base url on which your bot would listen example: https://mybot.example.com",
       "value": ""

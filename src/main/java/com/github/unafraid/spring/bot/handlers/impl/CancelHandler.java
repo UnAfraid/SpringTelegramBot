@@ -4,8 +4,8 @@ import com.github.unafraid.telegrambot.bots.AbstractTelegramBot;
 import com.github.unafraid.telegrambot.handlers.ICancelHandler;
 import com.github.unafraid.telegrambot.handlers.ICommandHandler;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.message.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.List;

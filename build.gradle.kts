@@ -26,16 +26,16 @@ repositories {
 
 dependencies {
     api("org.springframework.boot:spring-boot-starter-web")
-    api("org.telegram:telegrambots-meta:5.7.1")
-    api("com.github.unafraid.telegram-apis:InlineMenuAPI:1.0.13")
+    api("org.telegram:telegrambots-client:7.2.0")
+    api("com.github.unafraid.telegram-apis:InlineMenuAPI:2.0.0")
     api("org.jetbrains:annotations:23.0.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 configurations.all {
     resolutionStrategy.eachDependency {
-        if (requested.group == "org.apache.logging.log4j") {
-            useVersion("2.17.0")
+        if (requested.group == "org.slf4j" && requested.name == "slf4j-api") {
+            useVersion("1.7.36")
         }
     }
 }
