@@ -1,6 +1,6 @@
 plugins {
-    id("org.springframework.boot") version "2.6.6"
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("org.springframework.boot") version "4.0.1"
+    id("io.spring.dependency-management") version "1.1.7"
     java
     `java-library`
     distribution
@@ -25,19 +25,11 @@ repositories {
 }
 
 dependencies {
-    api("org.springframework.boot:spring-boot-starter-web")
-    api("org.telegram:telegrambots-client:7.2.0")
-    api("com.github.unafraid.telegram-apis:InlineMenuAPI:2.0.0")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    api("org.telegram:telegrambots-client:9.2.0")
+    api("com.github.unafraid.telegram-apis:InlineMenuAPI:2.0.3")
     api("org.jetbrains:annotations:23.0.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-}
-
-configurations.all {
-    resolutionStrategy.eachDependency {
-        if (requested.group == "org.slf4j" && requested.name == "slf4j-api") {
-            useVersion("1.7.36")
-        }
-    }
 }
 
 tasks.withType<Test> {

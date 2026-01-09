@@ -1,8 +1,5 @@
 package com.github.unafraid.spring.bot;
 
-import java.util.List;
-import java.util.Map;
-
 import com.github.unafraid.telegrambot.bots.DefaultTelegramBot;
 import com.github.unafraid.telegrambot.handlers.ICommandHandler;
 import org.jetbrains.annotations.NotNull;
@@ -12,10 +9,12 @@ import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
+import java.util.List;
+
 /**
  * @author UnAfraid
  */
-public abstract class TelegramWebHookBot extends DefaultTelegramBot  {
+public class TelegramWebHookBot extends DefaultTelegramBot {
 	public TelegramWebHookBot(@NotNull String token,
 							  @NotNull ApplicationContext appContext,
 							  @NotNull ObjectProvider<TelegramClient> telegramClientProvider,
@@ -23,9 +22,17 @@ public abstract class TelegramWebHookBot extends DefaultTelegramBot  {
 		super(telegramClientProvider.getIfAvailable(() -> new OkHttpTelegramClient(token)));
 		
 		setAccessLevelValidator(accessLevelValidator);
-		
-		final Map<String, ICommandHandler> handlers = appContext.getBeansOfType(ICommandHandler.class);
-		handlers.values().forEach(this::addHandler);
+	}
+
+	/**
+	 * Register command handlers with the underlying bot. Call this after the Spring
+	 * context is fully initialized (for example, from an ApplicationReadyEvent listener).
+	 */
+	public void registerHandlers(Iterable<ICommandHandler> handlers) {
+		if (handlers == null) return;
+		for (ICommandHandler h : handlers) {
+			addHandler(h);
+		}
 	}
 	
 	public final void onWebhookUpdateReceived(Update update) {
